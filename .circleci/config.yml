@@ -61,7 +61,10 @@ jobs:
       - <<: *save_dependencies
       - run:
           name: Lint
-          command: make lint
+          command: |
+            source .venv/bin/activate
+
+            make lint
       - run:
           name: raw account
           command: |
