@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CFn Artifacts Bucket
+
+Parameters:
+  Env:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvironName
+
+  CircleCIUserArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: CircleCIUserArn
+
+  CircleCIDeployRoleExternalId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: CircleCIDeployRoleExternalId
+
+Resources:
+  ArtifactsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub bibl-cfn-artifacts-${AWS::AccountId}-${Env}
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 7
+            Status: Enabled
+
+  CircleCIDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref CircleCIUserArn
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                sts:ExternalId: !Ref CircleCIDeployRoleExternalId
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMFullAccess
+      Policies:
+        - PolicyName: !Sub bibl-circleci-policy-${Env}
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:*
+                  - iam:PassRole
+                Resource:
+                  - "*"
+
+  SAMDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudformation.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+Outputs:
+  ArtifactsBucketName:
+    Value: !Ref ArtifactsBucket
+
+  CircleCIDeployRoleArn:
+    Value: !GetAtt CircleCIDeployRole.Arn
+
+  SAMDeployRoleArn:
+    Value: !GetAtt SAMDeployRole.Arn
