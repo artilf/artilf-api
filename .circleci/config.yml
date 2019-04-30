@@ -175,6 +175,18 @@ workflows:
       - test_integration:
           requires:
             - test_unit
+      - deploy_development:
+          requires:
+            - test_integration
+          filters:
+            branches:
+              only: master
+      - test_e2e_development:
+          requires:
+            - deploy_development
+          filters:
+            branches:
+              only: master
 
   artilf_api_production:
     jobs:
