@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -x
 
 environment=""
 is_assume=false
