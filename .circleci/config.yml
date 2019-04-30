@@ -113,7 +113,6 @@ jobs:
       - <<: *notify_success_to_slack
       - <<: *notify_failed_to_slack
 
-
   test_e2e_development:
     <<: *primary_containers
     steps:
@@ -147,7 +146,6 @@ jobs:
       - <<: *notify_success_to_slack
       - <<: *notify_failed_to_slack
 
-
   test_e2e_production:
     <<: *primary_containers
     steps:
@@ -166,7 +164,9 @@ workflows:
   artilf_api_development:
     jobs:
       - test_unit
-      - test_integration
+      - test_integration:
+          requires:
+            - test_unit
 
   artilf_api_production:
     jobs:
@@ -177,18 +177,40 @@ workflows:
             branches:
               ignore: /.*/
       - test_integration:
+          requires:
+            - test_unit
           filters:
             tags:
               only: /.*/
             branches:
               ignore: /.*/
       - deploy_development:
+          requires:
+            - test_integration
           filters:
             tags:
               only: /.*/
             branches:
               ignore: /.*/
       - test_e2e_development:
+          requires:
+            - deploy_development
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - deploy_production:
+          requires:
+            - test_e2e_development
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - test_e2e_production:
+          requires:
+            - deploy_production
           filters:
             tags:
               only: /.*/
