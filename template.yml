@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CFn Artifacts Bucket
+
+Parameters:
+  Env:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvironName
+
+Resources:
+  BaseResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/01_base_resource.yml

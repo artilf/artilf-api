@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 environment=""
-is_assume=""
+is_assume=false
 
 while getopts ':e:a' args; do
   case "$args" in
@@ -40,10 +40,11 @@ export AWS_ACCOUNT_ID="${aws_account_id}"
 export AWS_ENV="${aws_env}"
 export AWS_IAM_ROLE_ARN="${aws_iam_role_arn}"
 export AWS_IAM_ROLE_EXTERNAL_ID="${aws_iam_role_external_id}"
+export AWS_CFN_DEPLOY_ROLE_ARN="${aws_cfn_deploy_role_arn}"
 EOT
 
 
-if [[ -z ${is_assume} ]]; then
+if [[ ${is_assume} == true ]]; then
   exit 0
 fi
 
