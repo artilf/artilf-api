@@ -38,7 +38,6 @@ fi
 cat <<EOT
 export AWS_ACCOUNT_ID="${aws_account_id}"
 export AWS_ENV="${aws_env}"
-export AWS_DEFAULT_REGION="${aws_default_region}"
 export AWS_IAM_ROLE_ARN="${aws_iam_role_arn}"
 export AWS_IAM_ROLE_EXTERNAL_ID="${aws_iam_role_external_id}"
 EOT
