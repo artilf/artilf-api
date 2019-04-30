@@ -54,14 +54,14 @@ jobs:
           command: |
             source .venv/bin/activate
 
-            eval($(./guess.sh -e development -a))
+            eval "$(./guess.sh -e development -a)"
             aws sts get-caller-identity
       - run:
           name: production
           command: |
             source .venv/bin/activate
 
-            eval($(./guess.sh -e production -a))
+            eval "$(./guess.sh -e production -a)"
             aws sts get-caller-identity
 
 workflows:
