@@ -200,9 +200,18 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-      - deploy_production:
+      - approve_deploy_production:
+          type: approval
           requires:
             - test_e2e_development
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - deploy_production:
+          requires:
+            - approve_deploy_production
           filters:
             tags:
               only: /.*/
