@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a6de40a-dc10-4d6f-895e-394182c399aa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pipfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile.lock" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -11,29 +13,269 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="60">
-                <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
-              </first_editor>
-              <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Pipfile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" selection-start-line="17" selection-end-line="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/Pipfile">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="135">
+                  <caret line="9" column="11" lean-forward="true" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tmp/cfn_run.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="480">
+                  <caret line="32" selection-start-line="32" selection-end-line="32" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tmp/cfn_deploy.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="210">
+                  <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/tmp/external_api_circleci_config.yml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="210">
+                  <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+                  <folding>
+                    <element signature="e#195#216#0" />
+                    <element signature="e#301#309#0" />
+                    <element signature="e#357#359#0" />
+                    <element signature="e#521#581#0" />
+                    <element signature="e#579#581#0" />
+                    <element signature="e#585#799#0" />
+                    <element signature="e#665#799#0" />
+                    <element signature="e#732#799#0" />
+                    <element signature="e#749#799#0" />
+                    <element signature="e#803#983#0" />
+                    <element signature="e#847#983#0" />
+                    <element signature="e#864#879#0" />
+                    <element signature="e#895#983#0" />
+                    <element signature="e#986#1182#0" />
+                    <element signature="e#1028#1182#0" />
+                    <element signature="e#1045#1060#0" />
+                    <element signature="e#1076#1162#0" />
+                    <element signature="e#1175#1182#0" />
+                    <element signature="e#1186#1372#0" />
+                    <element signature="e#1234#1372#0" />
+                    <element signature="e#1251#1266#0" />
+                    <element signature="e#1282#1372#0" />
+                    <element signature="e#1375#1557#0" />
+                    <element signature="e#1409#1557#0" />
+                    <element signature="e#1429#1442#0" />
+                    <element signature="e#1458#1557#0" />
+                    <element signature="e#1560#1796#0" />
+                    <element signature="e#1632#1796#0" />
+                    <element signature="e#1649#1681#0" />
+                    <element signature="e#1697#1796#0" />
+                    <element signature="e#2503#2684#0" />
+                    <element signature="e#2537#2684#0" />
+                    <element signature="e#2554#2567#0" />
+                    <element signature="e#2583#2684#0" />
+                    <element signature="e#2685#5330#0" />
+                    <element signature="e#2693#2932#0" />
+                    <element signature="e#2749#2932#0" />
+                    <element signature="e#2764#2772#0" />
+                    <element signature="e#2779#2889#0" />
+                    <element signature="e#2781#2889#1" />
+                    <element signature="e#2802#2825#0" />
+                    <element signature="e#2845#2889#0" />
+                    <element signature="e#2896#2932#0" />
+                    <element signature="e#3477#3983#0" />
+                    <element signature="e#3529#3983#0" />
+                    <element signature="e#3544#3552#0" />
+                    <element signature="e#3559#3593#0" />
+                    <element signature="e#3600#3634#0" />
+                    <element signature="e#3641#3672#0" />
+                    <element signature="e#3679#3732#0" />
+                    <element signature="e#3681#3732#1" />
+                    <element signature="e#3739#3778#0" />
+                    <element signature="e#3785#3810#0" />
+                    <element signature="e#3817#3837#0" />
+                    <element signature="e#3844#3864#0" />
+                    <element signature="e#3871#3918#0" />
+                    <element signature="e#3873#3918#1" />
+                    <element signature="e#3906#3918#0" />
+                    <element signature="e#3925#3949#0" />
+                    <element signature="e#3956#3983#0" />
+                    <element signature="e#3987#4665#0" />
+                    <element signature="e#4048#4665#0" />
+                    <element signature="e#4063#4071#0" />
+                    <element signature="e#4078#4112#0" />
+                    <element signature="e#4119#4153#0" />
+                    <element signature="e#4160#4191#0" />
+                    <element signature="e#4198#4251#0" />
+                    <element signature="e#4200#4251#1" />
+                    <element signature="e#4258#4371#0" />
+                    <element signature="e#4260#4371#1" />
+                    <element signature="e#4281#4304#0" />
+                    <element signature="e#4324#4371#0" />
+                    <element signature="e#4378#4414#0" />
+                    <element signature="e#4421#4460#0" />
+                    <element signature="e#4467#4492#0" />
+                    <element signature="e#4499#4519#0" />
+                    <element signature="e#4526#4546#0" />
+                    <element signature="e#4553#4600#0" />
+                    <element signature="e#4555#4600#1" />
+                    <element signature="e#4588#4600#0" />
+                    <element signature="e#4607#4631#0" />
+                    <element signature="e#4638#4665#0" />
+                    <element signature="e#4669#5330#0" />
+                    <element signature="e#4738#5330#0" />
+                    <element signature="e#4753#4761#0" />
+                    <element signature="e#4768#4802#0" />
+                    <element signature="e#4809#4843#0" />
+                    <element signature="e#4850#4903#0" />
+                    <element signature="e#4852#4903#1" />
+                    <element signature="e#4910#5036#0" />
+                    <element signature="e#4912#5036#1" />
+                    <element signature="e#4933#4956#0" />
+                    <element signature="e#4976#5036#0" />
+                    <element signature="e#5043#5079#0" />
+                    <element signature="e#5086#5125#0" />
+                    <element signature="e#5132#5157#0" />
+                    <element signature="e#5164#5184#0" />
+                    <element signature="e#5191#5211#0" />
+                    <element signature="e#5218#5265#0" />
+                    <element signature="e#5220#5265#1" />
+                    <element signature="e#5253#5265#0" />
+                    <element signature="e#5272#5296#0" />
+                    <element signature="e#5303#5330#0" />
+                    <element signature="e#5401#5489#0" />
+                    <element signature="e#5403#5489#1" />
+                    <element signature="e#5438#5489#1" />
+                    <element signature="e#5459#5489#1" />
+                    <element signature="e#5485#5489#0" />
+                    <element signature="e#5496#5638#0" />
+                    <element signature="e#5498#5638#1" />
+                    <element signature="e#5529#5576#0" />
+                    <element signature="e#5553#5576#0" />
+                    <element signature="e#5587#5638#0" />
+                    <element signature="e#5608#5638#1" />
+                    <element signature="e#5634#5638#0" />
+                    <element signature="e#5645#5801#0" />
+                    <element signature="e#5647#5801#1" />
+                    <element signature="e#5678#5721#0" />
+                    <element signature="e#5702#5721#0" />
+                    <element signature="e#5732#5801#0" />
+                    <element signature="e#5753#5801#1" />
+                    <element signature="e#5779#5801#0" />
+                    <element signature="e#5808#6051#0" />
+                    <element signature="e#5810#6051#1" />
+                    <element signature="e#5842#5850#0" />
+                    <element signature="e#5861#5904#0" />
+                    <element signature="e#5885#5904#0" />
+                    <element signature="e#5915#6051#0" />
+                    <element signature="e#5936#5990#0" />
+                    <element signature="e#5960#5990#1" />
+                    <element signature="e#5984#5990#0" />
+                    <element signature="e#6003#6051#0" />
+                    <element signature="e#6029#6051#0" />
+                    <element signature="e#6058#6285#0" />
+                    <element signature="e#6060#6285#1" />
+                    <element signature="e#6100#6138#0" />
+                    <element signature="e#6124#6138#0" />
+                    <element signature="e#6149#6285#0" />
+                    <element signature="e#6170#6224#0" />
+                    <element signature="e#6194#6224#1" />
+                    <element signature="e#6218#6224#0" />
+                    <element signature="e#6237#6285#0" />
+                    <element signature="e#6263#6285#0" />
+                    <element signature="e#6292#6536#0" />
+                    <element signature="e#6294#6536#1" />
+                    <element signature="e#6336#6344#0" />
+                    <element signature="e#6355#6407#0" />
+                    <element signature="e#6379#6407#0" />
+                    <element signature="e#6418#6536#0" />
+                    <element signature="e#6439#6475#0" />
+                    <element signature="e#6471#6475#0" />
+                    <element signature="e#6488#6536#0" />
+                    <element signature="e#6514#6536#0" />
+                    <element signature="e#6543#6770#0" />
+                    <element signature="e#6545#6770#1" />
+                    <element signature="e#6593#6641#0" />
+                    <element signature="e#6617#6641#0" />
+                    <element signature="e#6652#6770#0" />
+                    <element signature="e#6673#6709#0" />
+                    <element signature="e#6705#6709#0" />
+                    <element signature="e#6722#6770#0" />
+                    <element signature="e#6748#6770#0" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="570">
+                  <caret line="63" column="43" selection-start-line="63" selection-start-column="43" selection-end-line="63" selection-end-column="43" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="840">
+                  <caret line="70" column="17" selection-start-line="70" selection-start-column="17" selection-end-line="70" selection-end-column="17" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/guess.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="390">
+                  <caret line="26" column="25" selection-start-line="26" selection-start-column="2" selection-end-line="26" selection-end-column="25" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/run_prepare_environ.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="540">
+                  <caret line="36" column="23" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/00_prepare_environ.yml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="570">
+                  <caret line="74" column="18" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
+                  <folding>
+                    <element signature="e#212#996#1" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>dependencies-{{ .Branch }}-{{ checksum &quot;Pipfile&quot; }}-{{ checksum &quot;Pipfile.lock&quot; }}</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,7 +284,20 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/tmp/external_api_circleci_config.yml" />
+        <option value="$PROJECT_DIR$/tmp/external_guess.sh" />
+        <option value="$PROJECT_DIR$/tmp/external_assume.sh" />
+        <option value="$PROJECT_DIR$/tmp/cfn_run.sh" />
+        <option value="$PROJECT_DIR$/tmp/cfn_deploy.sh" />
+        <option value="$PROJECT_DIR$/src/00_prepare_environ/xx_create_circleci_user.yml" />
+        <option value="$PROJECT_DIR$/src/00_xx_create_circleci_user.yml" />
+        <option value="$PROJECT_DIR$/params/development/parameters.ini" />
         <option value="$PROJECT_DIR$/Pipfile" />
+        <option value="$PROJECT_DIR$/src/00_xx_create_cfn_artifacts_bucket.yml" />
+        <option value="$PROJECT_DIR$/guess.sh" />
+        <option value="$PROJECT_DIR$/src/00_prepare_environ.yml" />
+        <option value="$PROJECT_DIR$/run_prepare_environ.sh" />
+        <option value="$PROJECT_DIR$/.circleci/config.yml" />
       </list>
     </option>
   </component>
@@ -56,9 +311,10 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="width" value="1440" />
-    <option name="height" value="900" />
+  <component name="ProjectFrameBounds" fullScreen="true">
+    <option name="y" value="-1080" />
+    <option name="width" value="1920" />
+    <option name="height" value="1080" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -68,7 +324,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -80,12 +335,15 @@
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="editor.config.ad.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -113,16 +371,12 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="877" extended-state="6" />
+    <frame x="0" y="-1080" width="1920" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24964234" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.18743344" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.3299363" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -130,13 +384,33 @@
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="make" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.32970297" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="make" order="3" />
     </layout>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/tmp/external_assume.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" selection-start-line="16" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/external_guess.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="655">
+          <caret line="74" selection-start-line="69" selection-end-line="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/00_prepare_environ/xx_create_circleci_user.yml" />
+    <entry file="file://$PROJECT_DIR$/src/00_xx_create_circleci_user.yml" />
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -147,10 +421,240 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/cfn_run.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Pipfile">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" selection-start-line="17" selection-end-line="17" />
+        <state relative-caret-position="135">
+          <caret line="9" column="11" lean-forward="true" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/00_xx_create_cfn_artifacts_bucket.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" selection-start-line="8" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/params/development/parameters.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="66" lean-forward="true" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/external_api_circleci_config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
+          <folding>
+            <element signature="e#195#216#0" />
+            <element signature="e#301#309#0" />
+            <element signature="e#357#359#0" />
+            <element signature="e#521#581#0" />
+            <element signature="e#579#581#0" />
+            <element signature="e#585#799#0" />
+            <element signature="e#665#799#0" />
+            <element signature="e#732#799#0" />
+            <element signature="e#749#799#0" />
+            <element signature="e#803#983#0" />
+            <element signature="e#847#983#0" />
+            <element signature="e#864#879#0" />
+            <element signature="e#895#983#0" />
+            <element signature="e#986#1182#0" />
+            <element signature="e#1028#1182#0" />
+            <element signature="e#1045#1060#0" />
+            <element signature="e#1076#1162#0" />
+            <element signature="e#1175#1182#0" />
+            <element signature="e#1186#1372#0" />
+            <element signature="e#1234#1372#0" />
+            <element signature="e#1251#1266#0" />
+            <element signature="e#1282#1372#0" />
+            <element signature="e#1375#1557#0" />
+            <element signature="e#1409#1557#0" />
+            <element signature="e#1429#1442#0" />
+            <element signature="e#1458#1557#0" />
+            <element signature="e#1560#1796#0" />
+            <element signature="e#1632#1796#0" />
+            <element signature="e#1649#1681#0" />
+            <element signature="e#1697#1796#0" />
+            <element signature="e#2503#2684#0" />
+            <element signature="e#2537#2684#0" />
+            <element signature="e#2554#2567#0" />
+            <element signature="e#2583#2684#0" />
+            <element signature="e#2685#5330#0" />
+            <element signature="e#2693#2932#0" />
+            <element signature="e#2749#2932#0" />
+            <element signature="e#2764#2772#0" />
+            <element signature="e#2779#2889#0" />
+            <element signature="e#2781#2889#1" />
+            <element signature="e#2802#2825#0" />
+            <element signature="e#2845#2889#0" />
+            <element signature="e#2896#2932#0" />
+            <element signature="e#3477#3983#0" />
+            <element signature="e#3529#3983#0" />
+            <element signature="e#3544#3552#0" />
+            <element signature="e#3559#3593#0" />
+            <element signature="e#3600#3634#0" />
+            <element signature="e#3641#3672#0" />
+            <element signature="e#3679#3732#0" />
+            <element signature="e#3681#3732#1" />
+            <element signature="e#3739#3778#0" />
+            <element signature="e#3785#3810#0" />
+            <element signature="e#3817#3837#0" />
+            <element signature="e#3844#3864#0" />
+            <element signature="e#3871#3918#0" />
+            <element signature="e#3873#3918#1" />
+            <element signature="e#3906#3918#0" />
+            <element signature="e#3925#3949#0" />
+            <element signature="e#3956#3983#0" />
+            <element signature="e#3987#4665#0" />
+            <element signature="e#4048#4665#0" />
+            <element signature="e#4063#4071#0" />
+            <element signature="e#4078#4112#0" />
+            <element signature="e#4119#4153#0" />
+            <element signature="e#4160#4191#0" />
+            <element signature="e#4198#4251#0" />
+            <element signature="e#4200#4251#1" />
+            <element signature="e#4258#4371#0" />
+            <element signature="e#4260#4371#1" />
+            <element signature="e#4281#4304#0" />
+            <element signature="e#4324#4371#0" />
+            <element signature="e#4378#4414#0" />
+            <element signature="e#4421#4460#0" />
+            <element signature="e#4467#4492#0" />
+            <element signature="e#4499#4519#0" />
+            <element signature="e#4526#4546#0" />
+            <element signature="e#4553#4600#0" />
+            <element signature="e#4555#4600#1" />
+            <element signature="e#4588#4600#0" />
+            <element signature="e#4607#4631#0" />
+            <element signature="e#4638#4665#0" />
+            <element signature="e#4669#5330#0" />
+            <element signature="e#4738#5330#0" />
+            <element signature="e#4753#4761#0" />
+            <element signature="e#4768#4802#0" />
+            <element signature="e#4809#4843#0" />
+            <element signature="e#4850#4903#0" />
+            <element signature="e#4852#4903#1" />
+            <element signature="e#4910#5036#0" />
+            <element signature="e#4912#5036#1" />
+            <element signature="e#4933#4956#0" />
+            <element signature="e#4976#5036#0" />
+            <element signature="e#5043#5079#0" />
+            <element signature="e#5086#5125#0" />
+            <element signature="e#5132#5157#0" />
+            <element signature="e#5164#5184#0" />
+            <element signature="e#5191#5211#0" />
+            <element signature="e#5218#5265#0" />
+            <element signature="e#5220#5265#1" />
+            <element signature="e#5253#5265#0" />
+            <element signature="e#5272#5296#0" />
+            <element signature="e#5303#5330#0" />
+            <element signature="e#5401#5489#0" />
+            <element signature="e#5403#5489#1" />
+            <element signature="e#5438#5489#1" />
+            <element signature="e#5459#5489#1" />
+            <element signature="e#5485#5489#0" />
+            <element signature="e#5496#5638#0" />
+            <element signature="e#5498#5638#1" />
+            <element signature="e#5529#5576#0" />
+            <element signature="e#5553#5576#0" />
+            <element signature="e#5587#5638#0" />
+            <element signature="e#5608#5638#1" />
+            <element signature="e#5634#5638#0" />
+            <element signature="e#5645#5801#0" />
+            <element signature="e#5647#5801#1" />
+            <element signature="e#5678#5721#0" />
+            <element signature="e#5702#5721#0" />
+            <element signature="e#5732#5801#0" />
+            <element signature="e#5753#5801#1" />
+            <element signature="e#5779#5801#0" />
+            <element signature="e#5808#6051#0" />
+            <element signature="e#5810#6051#1" />
+            <element signature="e#5842#5850#0" />
+            <element signature="e#5861#5904#0" />
+            <element signature="e#5885#5904#0" />
+            <element signature="e#5915#6051#0" />
+            <element signature="e#5936#5990#0" />
+            <element signature="e#5960#5990#1" />
+            <element signature="e#5984#5990#0" />
+            <element signature="e#6003#6051#0" />
+            <element signature="e#6029#6051#0" />
+            <element signature="e#6058#6285#0" />
+            <element signature="e#6060#6285#1" />
+            <element signature="e#6100#6138#0" />
+            <element signature="e#6124#6138#0" />
+            <element signature="e#6149#6285#0" />
+            <element signature="e#6170#6224#0" />
+            <element signature="e#6194#6224#1" />
+            <element signature="e#6218#6224#0" />
+            <element signature="e#6237#6285#0" />
+            <element signature="e#6263#6285#0" />
+            <element signature="e#6292#6536#0" />
+            <element signature="e#6294#6536#1" />
+            <element signature="e#6336#6344#0" />
+            <element signature="e#6355#6407#0" />
+            <element signature="e#6379#6407#0" />
+            <element signature="e#6418#6536#0" />
+            <element signature="e#6439#6475#0" />
+            <element signature="e#6471#6475#0" />
+            <element signature="e#6488#6536#0" />
+            <element signature="e#6514#6536#0" />
+            <element signature="e#6543#6770#0" />
+            <element signature="e#6545#6770#1" />
+            <element signature="e#6593#6641#0" />
+            <element signature="e#6617#6641#0" />
+            <element signature="e#6652#6770#0" />
+            <element signature="e#6673#6709#0" />
+            <element signature="e#6705#6709#0" />
+            <element signature="e#6722#6770#0" />
+            <element signature="e#6748#6770#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/00_prepare_environ.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="74" column="18" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
+          <folding>
+            <element signature="e#212#996#1" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run_prepare_environ.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="36" column="23" selection-start-line="36" selection-start-column="23" selection-end-line="36" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tmp/cfn_deploy.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/guess.sh">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="25" selection-start-line="26" selection-start-column="2" selection-end-line="26" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.circleci/config.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="63" column="43" selection-start-line="63" selection-start-column="43" selection-end-line="63" selection-end-column="43" />
         </state>
       </provider>
     </entry>
