@@ -23,7 +23,7 @@ while getopts ':sef' args; do
 done
 
 endpoint="$SLACK_INCOMMING_WEBHOOK_URL"
-text="==========\nリポジトリ: ${CIRCLE_REPOSITORY_URL}\n対象: ${CIRCLE_BRANCH}${CIRCLE_TAG}\nジョブ: ${CIRCLE_JOB}\nステータス: ${status}\nビルドURL: ${CIRCLE_BUILD_URL}"
+text="リポジトリ: ${CIRCLE_REPOSITORY_URL}\nブランチ/タグ: ${CIRCLE_BRANCH}${CIRCLE_TAG}\nジョブ: ${CIRCLE_JOB}\nステータス: ${status}\nビルドURL: ${CIRCLE_BUILD_URL}"
 payload="{\"username\": \"$status\", \"text\": \"$text\", \"icon_emoji\": \"$icon\"}"
 
 curl -X POST --data-urlencode "payload=$payload" ${endpoint}
