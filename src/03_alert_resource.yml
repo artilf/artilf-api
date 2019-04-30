@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: alert resources
+
+Parameters:
+  Env:
+    Type: String
+
+  DefaultSlackIncommingWebhookUrl:
+    Type: String
+
+Resources:
+  SlackNotifierApplication:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:355081757265:applications/sar-aws-sns-to-slack
+        SemanticVersion: 1.2.0
+      Parameters:
+        DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
