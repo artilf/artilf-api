@@ -116,6 +116,7 @@ jobs:
   test_e2e_development:
     <<: *primary_containers
     steps:
+      - checkout
       - <<: *notify_start_to_slack
       - <<: *restore_dependencies
       - <<: *install_dependencies
@@ -149,6 +150,7 @@ jobs:
   test_e2e_production:
     <<: *primary_containers
     steps:
+      - checkout
       - <<: *notify_start_to_slack
       - <<: *restore_dependencies
       - <<: *install_dependencies
