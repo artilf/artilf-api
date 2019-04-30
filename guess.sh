@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 environment=""
 is_assume=false
@@ -44,7 +45,7 @@ export AWS_CFN_DEPLOY_ROLE_ARN="${aws_cfn_deploy_role_arn}"
 EOT
 
 
-if [[ ${is_assume} == true ]]; then
+if [[ ${is_assume} == false ]]; then
   exit 0
 fi
 
