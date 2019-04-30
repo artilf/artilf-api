@@ -34,15 +34,37 @@ references:
       keys:
         - dependencies-{{ .Branch }}-{{ checksum "Pipfile" }}-{{ checksum "Pipfile.lock" }}
 
+  notify_start_to_slack: &notify_start_to_slack
+    run:
+      name: Notify Start to Slack
+      command: ./notify.sh -s
+
+  notify_success_to_slack: &notify_success_to_slack
+    run:
+      name: Notify Success to Slack
+      command: ./notify.sh -e
+
+  notify_failed_to_slack: &notify_failed_to_slack
+    run:
+      name: Notify Failed to Slack
+      command: ./notify.sh -f
+      when: on_fail
 
 jobs:
   test_unit:
     <<: *primary_containers
     steps:
       - checkout
+      - <<: *notify_start_to_slack
       - <<: *restore_dependencies
       - <<: *install_dependencies
       - <<: *save_dependencies
+      - run:
+          name: Lint
+          command: |
+            source .venv/bin/activate
+
+            make lint
       - run:
           name: raw account
           command: |
@@ -63,9 +85,163 @@ jobs:
 
             eval "$(./guess.sh -e production -a)"
             aws sts get-caller-identity
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
+
+  test_integration:
+    <<: *primary_containers
+    steps:
+      - checkout
+      - <<: *notify_start_to_slack
+      - <<: *restore_dependencies
+      - <<: *install_dependencies
+      - <<: *save_dependencies
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
+
+  deploy_development:
+    <<: *primary_containers
+    steps:
+      - checkout
+      - <<: *notify_start_to_slack
+      - <<: *restore_dependencies
+      - <<: *install_dependencies
+      - <<: *save_dependencies
+      - run:
+          name: deploy
+          command: |
+            source .venv/bin/activate
+
+            eval "$(./guess.sh -e development -a)"
+            make deploy
+      - store_artifacts:
+          path: packaged_template.yml
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
+
+  test_e2e_development:
+    <<: *primary_containers
+    steps:
+      - checkout
+      - <<: *notify_start_to_slack
+      - <<: *restore_dependencies
+      - <<: *install_dependencies
+      - <<: *save_dependencies
+      - run:
+          name: test e2e on development
+          command: echo e2e
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
+
+  deploy_production:
+    <<: *primary_containers
+    steps:
+      - checkout
+      - <<: *notify_start_to_slack
+      - <<: *restore_dependencies
+      - <<: *install_dependencies
+      - <<: *save_dependencies
+      - run:
+          name: deploy
+          command: |
+            source .venv/bin/activate
+
+            eval "$(./guess.sh -e production -a)"
+            make deploy
+      - store_artifacts:
+          path: packaged_template.yml
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
+
+  test_e2e_production:
+    <<: *primary_containers
+    steps:
+      - checkout
+      - <<: *notify_start_to_slack
+      - <<: *restore_dependencies
+      - <<: *install_dependencies
+      - <<: *save_dependencies
+      - run:
+          name: test e2e production
+          command: echo e2e
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
 
 workflows:
   version: 2
-  aws_test:
+  artilf_api_development:
     jobs:
       - test_unit
+      - test_integration:
+          requires:
+            - test_unit
+      - deploy_development:
+          requires:
+            - test_integration
+          filters:
+            branches:
+              only: master
+      - test_e2e_development:
+          requires:
+            - deploy_development
+          filters:
+            branches:
+              only: master
+
+  artilf_api_production:
+    jobs:
+      - test_unit:
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - test_integration:
+          requires:
+            - test_unit
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - deploy_development:
+          requires:
+            - test_integration
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - test_e2e_development:
+          requires:
+            - deploy_development
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - approve_deploy_production:
+          type: approval
+          requires:
+            - test_e2e_development
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - deploy_production:
+          requires:
+            - approve_deploy_production
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
+      - test_e2e_production:
+          requires:
+            - deploy_production
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore: /.*/
