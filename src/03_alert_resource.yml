@@ -3,6 +3,10 @@ Transform: AWS::Serverless-2016-10-31
 Description: alert resources
 
 Parameters:
+  LambdaLogGroupNamePrefix:
+    Type: String
+    Default: /aws/lambda
+
   Env:
     Type: String
 
@@ -39,7 +43,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: Slack通知用のSNSにログのエラー通知を投げる
-      CodeUri: 03_base_resource/notifier
+      CodeUri: 03_alert_resource/notifier
       Handler: index.handler
       Policies:
         - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
@@ -48,3 +52,9 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       Layers:
         - !GetAtt SlackNotifierApplication.Outputs.SlackNotifierLayerArn
+
+  NotifierLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${LambdaLogGroupNamePrefix}/${NotifierFunction}
+      RetentionInDays: 30
