@@ -9,7 +9,7 @@ Resources:
   CommonLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      ContentUri: 01_base_resource/common/python
+      ContentUri: 01_base_resource/common
       RetentionPolicy: Retain
       CompatibleRuntimes:
         - python3.6
