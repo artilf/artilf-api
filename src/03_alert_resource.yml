@@ -39,6 +39,9 @@ Resources:
       Parameters:
         DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
 
+  LogAlertQueue:
+    Type: AWS::SQS::Queue
+
   NotifierFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -52,6 +55,13 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       Layers:
         - !GetAtt SlackNotifierApplication.Outputs.SlackNotifierLayerArn
+      Events:
+        GetFromSQS:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt LogAlertQueue.Arn
+            BatchSize: 10
+            Enabled: true
 
   NotifierLogGroup:
     Type: AWS::Logs::LogGroup
@@ -86,3 +96,10 @@ Resources:
       EvaluationPeriods: 1
       Threshold: 1.0
       ComparisonOperator: GreaterThanOrEqualToThreshold
+
+Outputs:
+  LogAlertQueueUrl:
+    Value: !Ref LogAlertQueue
+
+  LogAlertQueueArn:
+    Value: !GetAtt LogAlertQueue.Arn
