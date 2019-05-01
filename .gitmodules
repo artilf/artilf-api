@@ -1,0 +1,4 @@
+[submodule "dummy/sar-aws-sns-to-slack"]
+	path = dummy/sar-aws-sns-to-slack
+	url = git@github.com:sinofseven/sar-aws-sns-to-slack.git
+	branch = master
