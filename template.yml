@@ -5,9 +5,21 @@ Parameters:
   Env:
     Type: AWS::SSM::Parameter::Value<String>
     Default: EnvironName
+  DefaultSlackIncommingWebhookUrl:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: ArtilfSlackWebhookUrl
 
 Resources:
   BaseResourceStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: src/01_base_resource.yml
+
+  AlertResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/03_alert_resource.yml
+      Parameters:
+        Env: !Ref Env
+        DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
+        CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn

@@ -1,0 +1,108 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: alert resources
+
+Parameters:
+  LambdaLogGroupNamePrefix:
+    Type: String
+    Default: /aws/lambda
+
+  Env:
+    Type: String
+
+  DefaultSlackIncommingWebhookUrl:
+    Type: String
+
+  CommonLayerArn:
+    Type: String
+
+Globals:
+  Function:
+    Runtime: python3.6
+    Timeout: 30
+    MemorySize: 128
+    AutoPublishAlias: !Ref Env
+    Environment:
+      Variables:
+        AWS_ENV: !Ref Env
+    Layers:
+      - !Ref CommonLayerArn
+
+
+Resources:
+  SlackNotifierApplication:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: arn:aws:serverlessrepo:us-east-1:355081757265:applications/sar-aws-sns-to-slack
+        SemanticVersion: 1.2.0
+      Parameters:
+        DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
+
+  LogAlertQueue:
+    Type: AWS::SQS::Queue
+
+  NotifierFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Slack通知用のSNSにログのエラー通知を投げる
+      CodeUri: 03_alert_resource/notifier
+      Handler: index.handler
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+      Layers:
+        - !GetAtt SlackNotifierApplication.Outputs.SlackNotifierLayerArn
+      Events:
+        GetFromSQS:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt LogAlertQueue.Arn
+            BatchSize: 10
+            Enabled: true
+
+  NotifierLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${LambdaLogGroupNamePrefix}/${NotifierFunction}
+      RetentionInDays: 30
+
+  ErrorAlertSNSTopic:
+    Type: AWS::SNS::Topic
+
+  NotifierErrorAlertMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: "?\"\\\"levelname\\\": \\\"ERROR\\\"\""
+      LogGroupName: !Ref NotifierLogGroup
+      MetricTransformations:
+        - MetricName: !Sub ${NotifierFunction}-error-alert-metric-filter-${Env}
+          MetricNamespace: Custom/LogMetrics
+          MetricValue: "1"
+
+  NotifierErrorAlertAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub ${NotifierFunction}-error-alert-${Env}
+      AlarmActions:
+        - !Ref ErrorAlertSNSTopic
+      ActionsEnabled: true
+      MetricName: !Sub ${NotifierFunction}-error-alert-metric-filter-${Env}
+      Namespace: Custom/LogMetrics
+      Statistic: Sum
+      Period: 60
+      EvaluationPeriods: 1
+      Threshold: 1.0
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+
+Outputs:
+  LogAlertQueueUrl:
+    Value: !Ref LogAlertQueue
+
+  LogAlertQueueArn:
+    Value: !GetAtt LogAlertQueue.Arn
+
+  ErrorAlertSNSTopicArn:
+    Value: !GetAtt ErrorAlertSNSTopic.Arn
