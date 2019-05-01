@@ -69,7 +69,7 @@ Resources:
       LogGroupName: !Sub ${LambdaLogGroupNamePrefix}/${NotifierFunction}
       RetentionInDays: 30
 
-  NotifierErrorAlertSNSTopic:
+  ErrorAlertSNSTopic:
     Type: AWS::SNS::Topic
 
   NotifierErrorAlertMetricFilter:
@@ -87,7 +87,7 @@ Resources:
     Properties:
       AlarmName: !Sub ${NotifierFunction}-error-alert-${Env}
       AlarmActions:
-        - !Ref NotifierErrorAlertSNSTopic
+        - !Ref ErrorAlertSNSTopic
       ActionsEnabled: true
       MetricName: !Sub ${NotifierFunction}-error-alert-metric-filter-${Env}
       Namespace: Custom/LogMetrics
