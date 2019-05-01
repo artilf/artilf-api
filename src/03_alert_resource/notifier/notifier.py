@@ -43,7 +43,8 @@ def publish_error(error):
     )
 
     if request_id is not None:
-        url += quote(f';filter="{request_id}"')
+        url += ';filter='
+        url += quote(f'"{request_id}"')
 
     function_name = os.path.basename(log_group)
     lines = [
