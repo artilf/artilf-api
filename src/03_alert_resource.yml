@@ -78,7 +78,7 @@ Resources:
       AlarmName: !Sub ${NotifierFunction}-error-alert-${Env}
       AlarmActions:
         - !Ref NotifierErrorAlertSNSTopic
-      ActionEnabled: true
+      ActionsEnabled: true
       MetricName: !Sub ${NotifierFunction}-error-alert-metric-filter-${Env}
       Namespace: Custom/LogMetrics
       Statistic: Sum
