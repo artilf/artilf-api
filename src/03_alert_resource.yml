@@ -103,3 +103,6 @@ Outputs:
 
   LogAlertQueueArn:
     Value: !GetAtt LogAlertQueue.Arn
+
+  ErrorAlertSNSTopicArn:
+    Value: !GetAtt ErrorAlertSNSTopic.Arn
