@@ -9,6 +9,22 @@ Parameters:
   DefaultSlackIncommingWebhookUrl:
     Type: String
 
+  CommonLayerArn:
+    Type: String
+
+Globals:
+  Function:
+    Runtime: python3.6
+    Timeout: 30
+    MemorySize: 128
+    AutoPublishAlias: !Ref Env
+    Environment:
+      Variables:
+        AWS_ENV: !Ref Env
+    Layers:
+      - !Ref CommonLayerArn
+
+
 Resources:
   SlackNotifierApplication:
     Type: AWS::Serverless::Application
@@ -18,3 +34,17 @@ Resources:
         SemanticVersion: 1.2.0
       Parameters:
         DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
+
+  PublisherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: Slack通知用のSNSにログのエラー通知を投げる
+      CodeUri: 03_base_resource/notifier
+      Handler: index.handler
+      Policies:
+        - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+      Layers:
+        - !GetAtt SlackNotifierApplication.Outputs.SlackNotifierLayerArn
