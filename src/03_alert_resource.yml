@@ -35,7 +35,7 @@ Resources:
       Parameters:
         DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
 
-  PublisherFunction:
+  NotifierFunction:
     Type: AWS::Serverless::Function
     Properties:
       Description: Slack通知用のSNSにログのエラー通知を投げる

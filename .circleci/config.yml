@@ -56,6 +56,11 @@ jobs:
     steps:
       - checkout
       - <<: *notify_start_to_slack
+      - run:
+          name: Get Submodule
+          command: |
+            git submodule init
+            git submodule update
       - <<: *restore_dependencies
       - <<: *install_dependencies
       - <<: *save_dependencies
@@ -85,6 +90,12 @@ jobs:
 
             eval "$(./guess.sh -e production -a)"
             aws sts get-caller-identity
+      - run:
+          name: Lint & Test Unit
+          command: |
+            source .venv/bin/activate
+            eval "$(./guess.sh -e development)"
+            make lint test-unit
       - <<: *notify_success_to_slack
       - <<: *notify_failed_to_slack
 

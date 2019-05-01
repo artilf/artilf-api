@@ -1,8 +1,9 @@
-from logger.get_logger import get_logger
-from aws_sns_to_slack import slack_notify
 import json
 import os
 from urllib.parse import quote
+
+from aws_sns_to_slack import slack_notify
+from logger.get_logger import get_logger
 
 logger = get_logger(__name__)
 
