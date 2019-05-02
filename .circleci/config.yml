@@ -52,7 +52,7 @@ references:
 
 jobs:
   test_unit:
-    <<: *primary_containers
+    <<: *test_containers
     steps:
       - checkout
       - <<: *notify_start_to_slack
@@ -163,15 +163,9 @@ workflows:
       - deploy_development:
           requires:
             - test_integration
-          filters:
-            branches:
-              only: master
       - test_e2e_development:
           requires:
             - deploy_development
-          filters:
-            branches:
-              only: master
 
   artilf_api_production:
     jobs:
