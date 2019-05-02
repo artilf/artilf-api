@@ -21,7 +21,7 @@ def main(event, client_s3=boto3.client('s3'), client_sqs=boto3.client('sqs')):
     alerts = []
     for s3_object in s3_objects:
         log_data = get_log_data(s3_object, client_s3)
-        alerts.append(parse_log_data(log_data))
+        alerts += parse_log_data(log_data)
     enqueue(alerts, queue_url, client_sqs)
 
 

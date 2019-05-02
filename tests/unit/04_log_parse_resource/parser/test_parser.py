@@ -1,6 +1,7 @@
 import json
-from parser import (enqueue, get_log_data, json_iter_load, parse_log_data,
-                    validate_and_get_s3_object_info)
+import os
+from parser import (enqueue, get_log_data, json_iter_load, main,
+                    parse_log_data, validate_and_get_s3_object_info)
 
 import pytest
 
@@ -450,3 +451,407 @@ class TestEnqueue(object):
     )
     def test_overflow(self, sqs, create_sqs_queue, alert_data):
         enqueue(alert_data, create_sqs_queue, sqs)
+
+
+@pytest.mark.parametrize(
+    'delete_environ', [
+        (['LOG_ALERT_QUEUE_URL'])
+    ], indirect=True
+)
+@pytest.mark.usefixtures('delete_environ')
+class TestMain(object):
+    @pytest.mark.parametrize(
+        'queue_url, event, error', [
+            (
+                None,
+                {},
+                TypeError
+            ),
+            (
+                '',
+                {},
+                ValueError
+            ),
+            (
+                'aaaa',
+                None,
+                TypeError
+            ),
+            (
+                'aaaa',
+                {},
+                KeyError
+            ),
+            (
+                'aaaa',
+                {'Records': 1},
+                TypeError
+            ),
+            (
+                'aaaa',
+                {'Records': [1]},
+                TypeError
+            ),
+            (
+                'aaaa',
+                {
+                    'Records': [
+                        {
+                            's3': {
+                                'bucket': {'name': 1},
+                                'object': {'key': 'aaa'}
+                            }
+                        }
+                    ]
+                },
+                TypeError
+            ),
+            (
+                'aaaa',
+                {
+                    'Records': [
+                        {
+                            's3': {
+                                'bucket': {'name': ''},
+                                'object': {'key': 'aaa'}
+                            }
+                        }
+                    ]
+                },
+                ValueError
+            ),
+            (
+                'aaaa',
+                {
+                    'Records': [
+                        {
+                            's3': {
+                                'bucket': {'name': 'aaa'},
+                                'object': {'key': 1}
+                            }
+                        }
+                    ]
+                },
+                TypeError
+            ),
+            (
+                'aaaa',
+                {
+                    'Records': [
+                        {
+                            's3': {
+                                'bucket': {'name': 'aaa'},
+                                'object': {'key': ''}
+                            }
+                        }
+                    ]
+                },
+                ValueError
+            )
+        ]
+    )
+    def test_exception(self, queue_url, event, error):
+        with pytest.raises(error):
+            os.environ['LOG_ALERT_QUEUE_URL'] = queue_url
+            main(event)
+
+    @pytest.mark.parametrize(
+        'create_s3_bucket, s3_put_gz_files, event, expected', [
+            (
+                'test_bucket',
+                {
+                    'bucket': 'test_bucket',
+                    'objects': [
+                        {
+                            'key': '1223334444',
+                            'body': '\n'.join([
+                                json.dumps({
+                                    'logGroup': 'test_group',
+                                    'logStream': 'test_stream',
+                                    'logEvents': [
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': '{"levelname": "ERROR", "lambda_request_id": "test_id"}'
+                                        }
+                                    ]
+                                })
+                            ])
+                        }
+                    ]
+                },
+                {
+                    'Records': [
+                        {
+                            's3': {
+                                'bucket': {'name': 'test_bucket'},
+                                'object': {'key': '1223334444'}
+                            }
+                        }
+                    ]
+                },
+                {
+                    'logGroup': 'test_group',
+                    'logStream': 'test_stream',
+                    'datetime': '2019-02-26 10:33:26.145000+09:00',
+                    'message': '{"levelname": "ERROR", "lambda_request_id": "test_id"}',
+                    'request_id': 'test_id'
+                }
+            )
+        ], indirect=['create_s3_bucket', 's3_put_gz_files']
+    )
+    @pytest.mark.usefixtures('create_s3_bucket', 's3_put_gz_files')
+    def test_single(self, s3, sqs, create_sqs_queue, event, expected):
+        os.environ['LOG_ALERT_QUEUE_URL'] = create_sqs_queue
+        main(event, client_s3=s3, client_sqs=sqs)
+
+        resp = sqs.receive_message(
+            QueueUrl=create_sqs_queue
+        )
+
+        actual = resp['Messages'][0]['Body']
+        assert json.loads(actual) == expected
+
+    @pytest.mark.parametrize(
+        'create_s3_bucket, s3_put_gz_files, event, alert_data', [
+            (
+                'test_bucket',
+                {
+                    'bucket': 'test_bucket',
+                    'objects': [
+                        {
+                            'key': '1223334444',
+                            'body': '\n'.join([
+                                json.dumps({
+                                    'logGroup': 'test_group',
+                                    'logStream': 'test_stream',
+                                    'logEvents': [
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 1, "subtitle": "イヴは夜明けに微笑んで",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "イヴは夜明けに微笑んで"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 2, "subtitle": "奏でる少女の道行きは",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "奏でる少女の道行きは"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 3, "subtitle": "アマデウスの詩、謳え敗者の王",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "アマデウスの詩、謳え敗者の王"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 4, "subtitle": "踊る世界、イヴの調律",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "踊る世界、イヴの調律"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 5, "subtitle": "全ての歌を夢見る子供たち",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "全ての歌を夢見る子供たち"}'
+                                            )
+                                        }
+                                    ]
+                                })
+                            ])
+                        },
+                        {
+                            'key': '4444333221',
+                            'body': '\n'.join([
+                                json.dumps({
+                                    'logGroup': 'test_group_02',
+                                    'logStream': 'test_stream_02',
+                                    'logEvents': [
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 6, "subtitle": "そしてシャオの福音来たり",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "そしてシャオの福音来たり"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 7, "subtitle": "新約の扉 汝ミクヴァの洗礼よ",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "新約の扉 汝ミクヴァの洗礼よ"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 8, "subtitle": "百億の星にリリスは祈り",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "百億の星にリリスは祈り"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 9, "subtitle": "ソフィア、詠と絆と涙を抱いて",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "ソフィア、詠と絆と涙を抱いて"}'
+                                            )
+                                        },
+                                        {
+                                            'timestamp': 1551144806145,
+                                            'message': (
+                                                '{"title": "黄昏色の詠使い", "number": 10, "subtitle": "夜明け色の詠使い",'
+                                                ' "levelname": "ERROR", "lambda_request_id": "夜明け色の詠使い"}'
+                                            )
+                                        }
+                                    ]
+                                })
+                            ])
+                        }
+                    ]
+                },
+                {
+                    'Records': [
+                        {
+                            's3': {
+                                'bucket': {'name': 'test_bucket'},
+                                'object': {'key': '1223334444'}
+                            }
+                        },
+                        {
+                            's3': {
+                                'bucket': {'name': 'test_bucket'},
+                                'object': {'key': '4444333221'}
+                            }
+                        }
+                    ]
+                },
+                [
+                    {
+                        'logGroup': 'test_group',
+                        'logStream': 'test_stream',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 1, "subtitle": "イヴは夜明けに微笑んで",'
+                            ' "levelname": "ERROR", "lambda_request_id": "イヴは夜明けに微笑んで"}'
+                        ),
+                        'request_id': 'イヴは夜明けに微笑んで'
+                    },
+                    {
+                        'logGroup': 'test_group',
+                        'logStream': 'test_stream',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 2, "subtitle": "奏でる少女の道行きは",'
+                            ' "levelname": "ERROR", "lambda_request_id": "奏でる少女の道行きは"}'
+                        ),
+                        'request_id': '奏でる少女の道行きは'
+                    },
+                    {
+                        'logGroup': 'test_group',
+                        'logStream': 'test_stream',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 3, "subtitle": "アマデウスの詩、謳え敗者の王",'
+                            ' "levelname": "ERROR", "lambda_request_id": "アマデウスの詩、謳え敗者の王"}'
+                        ),
+                        'request_id': 'アマデウスの詩、謳え敗者の王'
+                    },
+                    {
+                        'logGroup': 'test_group',
+                        'logStream': 'test_stream',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 4, "subtitle": "踊る世界、イヴの調律",'
+                            ' "levelname": "ERROR", "lambda_request_id": "踊る世界、イヴの調律"}'
+                        ),
+                        'request_id': '踊る世界、イヴの調律'
+                    },
+                    {
+                        'logGroup': 'test_group',
+                        'logStream': 'test_stream',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 5, "subtitle": "全ての歌を夢見る子供たち",'
+                            ' "levelname": "ERROR", "lambda_request_id": "全ての歌を夢見る子供たち"}'
+                        ),
+                        'request_id': '全ての歌を夢見る子供たち'
+                    },
+                    {
+                        'logGroup': 'test_group_02',
+                        'logStream': 'test_stream_02',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 6, "subtitle": "そしてシャオの福音来たり",'
+                            ' "levelname": "ERROR", "lambda_request_id": "そしてシャオの福音来たり"}'
+                        ),
+                        'request_id': 'そしてシャオの福音来たり'
+                    },
+                    {
+                        'logGroup': 'test_group_02',
+                        'logStream': 'test_stream_02',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 7, "subtitle": "新約の扉 汝ミクヴァの洗礼よ",'
+                            ' "levelname": "ERROR", "lambda_request_id": "新約の扉 汝ミクヴァの洗礼よ"}'
+                        ),
+                        'request_id': '新約の扉 汝ミクヴァの洗礼よ'
+                    },
+                    {
+                        'logGroup': 'test_group_02',
+                        'logStream': 'test_stream_02',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 8, "subtitle": "百億の星にリリスは祈り",'
+                            ' "levelname": "ERROR", "lambda_request_id": "百億の星にリリスは祈り"}'
+                        ),
+                        'request_id': '百億の星にリリスは祈り'
+                    },
+                    {
+                        'logGroup': 'test_group_02',
+                        'logStream': 'test_stream_02',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 9, "subtitle": "ソフィア、詠と絆と涙を抱いて",'
+                            ' "levelname": "ERROR", "lambda_request_id": "ソフィア、詠と絆と涙を抱いて"}'
+                        ),
+                        'request_id': 'ソフィア、詠と絆と涙を抱いて'
+                    },
+                    {
+                        'logGroup': 'test_group_02',
+                        'logStream': 'test_stream_02',
+                        'datetime': '2019-02-26 10:33:26.145000+09:00',
+                        'message': (
+                            '{"title": "黄昏色の詠使い", "number": 10, "subtitle": "夜明け色の詠使い",'
+                            ' "levelname": "ERROR", "lambda_request_id": "夜明け色の詠使い"}'
+                        ),
+                        'request_id': '夜明け色の詠使い'
+                    }
+                ]
+            )
+        ], indirect=['create_s3_bucket', 's3_put_gz_files']
+    )
+    @pytest.mark.usefixtures('create_s3_bucket', 's3_put_gz_files')
+    def test_multi(self, s3, sqs, create_sqs_queue, event, alert_data):
+        os.environ['LOG_ALERT_QUEUE_URL'] = create_sqs_queue
+        main(event, client_s3=s3, client_sqs=sqs)
+
+        resp = sqs.receive_message(
+            QueueUrl=create_sqs_queue,
+            MaxNumberOfMessages=10
+        )
+        ordered = []
+        for message in resp['Messages']:
+            body = json.loads(message['Body'])
+            flag = False
+            for i, data in enumerate(alert_data):
+                if body == data:
+                    flag = True
+                    ordered.append(i)
+                    break
+            assert flag
+
+        for i in range(10):
+            assert i in ordered
