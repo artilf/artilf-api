@@ -4,7 +4,10 @@ SHELL = /usr/bin/env bash -xeuo pipefail
 	isort \
 	lint \
 	clean \
-	deploy
+	deploy \
+	test-unit \
+	localstack-up \
+	localstack-down \
 
 isort:
 	@isort -rc \
@@ -58,3 +61,9 @@ test-unit:
 				python -m pytest $$handler_dir --cov-config=setup.cfg --cov=src/$$resource/$$handler; \
 		done \
 	done
+
+localstack-up:
+	docker-compose up -d
+
+localstack-down:
+	docker-compose down
