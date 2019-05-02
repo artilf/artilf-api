@@ -10,7 +10,7 @@ references:
       - image: circleci/python:3.6.8
       - image: localstack/localstack:0.9.1
         environment:
-          SERVICES: s3
+          SERVICES: s3,sqs
 
   install_dependencies: &install_dependencies
     run:
