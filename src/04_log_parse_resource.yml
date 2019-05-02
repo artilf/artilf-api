@@ -32,6 +32,9 @@ Globals:
       - !Ref CommonLayerArn
 
 Resources:
+  S3EventQueue:
+    Type: AWS::SQS::Queue
+
   ParserFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -46,6 +49,13 @@ Resources:
       Environment:
         Variables:
           LOG_ALERT_QUEUE_URL: !Ref LogAlertQueueUrl
+      Events:
+        GetFromSQS:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt S3EventQueue.Arn
+            BatchSize: 10
+            Enabled: true
 
   ParserLogGroup:
     Type: AWS::Logs::LogGroup
