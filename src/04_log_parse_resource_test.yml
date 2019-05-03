@@ -10,7 +10,7 @@ Resources:
   BaseResourceStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: src/01_base_resource.yml
+      TemplateURL: 01_base_resource.yml
 
   DummySNSTopic:
     Type: AWS::SNS::Topic
@@ -21,7 +21,7 @@ Resources:
   LogParseResourceStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: src/04_log_parse_resource.yml
+      TemplateURL: 04_log_parse_resource.yml
       Parameters:
         Env: !Ref Env
         CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
