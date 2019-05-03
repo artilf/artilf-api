@@ -19,7 +19,7 @@ Resources:
     Type: AWS::SQS::Queue
 
   DummyS3Bucket:
-    Type: AWS:S3:Bucket
+    Type: AWS::S3::Bucket
 
   LogParseResourceStack:
     Type: AWS::CloudFormation::Stack
