@@ -18,6 +18,9 @@ Resources:
   DummyQueue:
     Type: AWS::SQS::Queue
 
+  DummyS3Bucket:
+    Type: AWS:S3:Bucket
+
   LogParseResourceStack:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -31,3 +34,6 @@ Resources:
 Outputs:
   DummyQueueUrl:
     Value: !Ref DummyQueue
+
+  DummyBucketName:
+    Value: !Ref DummyS3Bucket

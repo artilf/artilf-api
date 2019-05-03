@@ -42,6 +42,9 @@ Resources:
   LogAlertQueue:
     Type: AWS::SQS::Queue
 
+  LogAlertTopic:
+    Type: AWS:SNS:Topic
+
   NotifierFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -51,17 +54,14 @@ Resources:
       Policies:
         - arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess
         - arn:aws:iam::aws:policy/AmazonSNSFullAccess
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       Layers:
         - !GetAtt SlackNotifierApplication.Outputs.SlackNotifierLayerArn
       Events:
-        GetFromSQS:
-          Type: SQS
+        GetFromSNS:
+          Type: SNS
           Properties:
-            Queue: !GetAtt LogAlertQueue.Arn
-            BatchSize: 10
-            Enabled: true
+            Topic: !Ref LogAlertTopic
 
   NotifierLogGroup:
     Type: AWS::Logs::LogGroup
@@ -103,6 +103,9 @@ Outputs:
 
   LogAlertQueueArn:
     Value: !GetAtt LogAlertQueue.Arn
+
+  LogAlertTopicArn:
+    Value: LogAlertTopic
 
   ErrorAlertSNSTopicArn:
     Value: !Ref ErrorAlertSNSTopic

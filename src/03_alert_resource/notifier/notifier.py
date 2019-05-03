@@ -22,11 +22,12 @@ def validate_and_get(event):
     if not isinstance(records, list):
         raise TypeError('event["Records"] is not list.')
     for i, record in enumerate(records):
-        logger.info(f'event["Records"][{i}]', record)
-        if not isinstance(record, dict):
-            raise TypeError(f'event["Records"][{i}] is not dict')
-        body = record.get('body')
-        result.append(json.loads(body))
+        try:
+            body = record['Sns']['Message']
+            result.append(json.loads(body))
+        except Exception as e:
+            logger.warning(f'Exception occurred in event["Records"][{i}]: {e}', exc_info=True)
+            raise
     return result
 
 
