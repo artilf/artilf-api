@@ -1,7 +1,7 @@
 import json
 import os
-from parser import (get_log_data, json_iter_load, main,
-                    parse_log_data, validate_and_get_s3_object_info, publish)
+from parser import (get_log_data, json_iter_load, main, parse_log_data,
+                    publish, validate_and_get_s3_object_info)
 
 import pytest
 

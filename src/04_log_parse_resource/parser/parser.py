@@ -4,7 +4,6 @@ from datetime import datetime, timedelta, timezone
 from gzip import GzipFile
 from json import JSONDecoder
 from json.decoder import WHITESPACE
-from uuid import uuid4
 
 import boto3
 
