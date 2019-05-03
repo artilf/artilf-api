@@ -1,10 +1,10 @@
-import pytest
-import botocore.session
-
-from botocore import credentials
-import pathlib
-import boto3
 import os
+import pathlib
+
+import boto3
+import botocore.session
+import pytest
+from botocore import credentials
 
 
 def get_service_object(name, botocore_session, is_resource=False):

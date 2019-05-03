@@ -1,7 +1,6 @@
-import pytest
-from io import BytesIO
-from gzip import GzipFile
 import json
+from gzip import GzipFile
+from io import BytesIO
 
 
 def test_normal(s3, sqs, stack_outputs):
@@ -29,5 +28,3 @@ def test_normal(s3, sqs, stack_outputs):
         Key=key,
         Body=io.getvalue()
     )
-
-
