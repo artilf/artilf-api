@@ -4,7 +4,7 @@ Description: integration test for log parse resource
 Parameters:
   Env:
     Type: String
-    Default: log-parse
+    Default: LogParse
 
 Resources:
   BaseResourceStack:
