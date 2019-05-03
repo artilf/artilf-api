@@ -85,5 +85,5 @@ itg-log-parse-create:
 		--no-fail-on-empty-changeset
 
 itg-log-parse-remove:
-	@aws run aws cloudformation delete-stack \
+	@aws cloudformation delete-stack \
 		--stack-name $(ITG_TEST_LOG_PARSE)
