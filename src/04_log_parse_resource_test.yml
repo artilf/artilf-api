@@ -67,7 +67,7 @@ Resources:
         LogAlertSNSTopicArn: !Ref DummyLogSNSTopic
 
 Outputs:
-  DummyQueueUrl:
+  DummyReceiveQueueUrl:
     Value: !Ref DummyReceiveQueue
 
   DummyBucketName:

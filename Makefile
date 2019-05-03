@@ -89,3 +89,6 @@ itg-log-parse-remove:
 		--stack-name $(ITG_TEST_LOG_PARSE)
 	@aws cloudformation wait stack-delete-complete \
 		--stack-name $(ITG_TEST_LOG_PARSE)
+
+itg-log-parse-test:
+	STACK_NAME=$(ITG_TEST_LOG_PARSE) python -m pytest tests/integration/04_log_parse_resource

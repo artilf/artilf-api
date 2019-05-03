@@ -47,6 +47,11 @@ def sqs(botocore_session):
 
 
 @pytest.fixture(scope='session')
+def stack_name():
+    return os.environ['STACK_NAME']
+
+
+@pytest.fixture(scope='session')
 def stack_info(stack_name, cfn):
     resp = cfn.describe_stacks(StackName=stack_name)
     return resp['Stacks'][0]

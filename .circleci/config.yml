@@ -100,6 +100,13 @@ jobs:
             eval "$(./guess.sh -e development -a)"
             make itg-log-parse-create
       - run:
+          name: test integration log parse resource
+          command: |
+            source .venv/bin/activate
+
+            eval "$(./guess.sh -e development -a)"
+            make itg-log-parse-test
+      - run:
           name: remove itg test resource
           command: |
             source .venv/bin/activate
