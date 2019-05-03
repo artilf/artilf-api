@@ -87,3 +87,7 @@ Resources:
       EvaluationPeriods: 1
       Threshold: 1.0
       ComparisonOperator: GreaterThanOrEqualToThreshold
+
+Outputs:
+  S3EventQueueUrl:
+    Value: !Ref S3EventQueue

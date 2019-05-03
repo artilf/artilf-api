@@ -12,11 +12,46 @@ Resources:
     Properties:
       TemplateURL: 01_base_resource.yml
 
-  DummySNSTopic:
+  DummyAlertSNSTopic:
     Type: AWS::SNS::Topic
 
-  DummyQueue:
+  DummyReceiveQueue:
     Type: AWS::SQS::Queue
+    Properties:
+      ReceiveMessageWaitTimeSeconds: 20
+      VisibilityTimeout: 0
+
+  DummyLogSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !GetAtt DummyReceiveQueue.Arn
+          Protocol: sqs
+
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": "SQS:SendMessage",
+              "Resource": "*",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": "${DummyLogSNSTopic}"
+                }
+              }
+            }
+          ]
+        }
+      Queues:
+        - !Ref DummyReceiveQueue
 
   DummyS3Bucket:
     Type: AWS::S3::Bucket
@@ -28,12 +63,15 @@ Resources:
       Parameters:
         Env: !Ref Env
         CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
-        ErrorAlertSNSTopicArn: !Ref DummySNSTopic
-        LogAlertQueueUrl: !Ref DummyQueue
+        ErrorAlertSNSTopicArn: !Ref DummyAlertSNSTopic
+        LogAlertSNSTopicArn: !Ref DummyLogSNSTopic
 
 Outputs:
   DummyQueueUrl:
-    Value: !Ref DummyQueue
+    Value: !Ref DummyReceiveQueue
 
   DummyBucketName:
     Value: !Ref DummyS3Bucket
+
+  S3EventQueueUrl:
+    Value: !GetAtt LogParseResourceStack.Outputs.S3EventQueueUrl
