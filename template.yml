@@ -32,4 +32,4 @@ Resources:
         Env: !Ref Env
         CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
         ErrorAlertSNSTopicArn: !GetAtt AlertResourceStack.Outputs.ErrorAlertSNSTopicArn
-        LogAlertQueueUrl: !GetAtt AlertResourceStack.Outputs.LogAlertQueueUrl
+        LogAlertSNSTopicArn: !GetAtt AlertResourceStack.Outputs.LogAlertSNSTopicArn

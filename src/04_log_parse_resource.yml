@@ -16,7 +16,7 @@ Parameters:
   ErrorAlertSNSTopicArn:
     Type: String
 
-  LogAlertQueueUrl:
+  LogAlertSNSTopicArn:
     Type: String
 
 Globals:
@@ -48,7 +48,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       Environment:
         Variables:
-          LOG_ALERT_QUEUE_URL: !Ref LogAlertQueueUrl
+          LOG_ALERT_TOPIC_ARN: !Ref LogAlertSNSTopicArn
       Events:
         GetFromSQS:
           Type: SQS

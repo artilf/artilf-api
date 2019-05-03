@@ -39,10 +39,7 @@ Resources:
       Parameters:
         DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
 
-  LogAlertQueue:
-    Type: AWS::SQS::Queue
-
-  LogAlertTopic:
+  LogAlertSNSTopic:
     Type: AWS:SNS:Topic
 
   NotifierFunction:
@@ -61,7 +58,7 @@ Resources:
         GetFromSNS:
           Type: SNS
           Properties:
-            Topic: !Ref LogAlertTopic
+            Topic: !Ref LogAlertSNSTopic
 
   NotifierLogGroup:
     Type: AWS::Logs::LogGroup
@@ -98,14 +95,8 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
 
 Outputs:
-  LogAlertQueueUrl:
-    Value: !Ref LogAlertQueue
-
-  LogAlertQueueArn:
-    Value: !GetAtt LogAlertQueue.Arn
-
-  LogAlertTopicArn:
-    Value: LogAlertTopic
+  LogAlertSNSTopicArn:
+    Value: !Ref LogAlertSNSTopic
 
   ErrorAlertSNSTopicArn:
     Value: !Ref ErrorAlertSNSTopic

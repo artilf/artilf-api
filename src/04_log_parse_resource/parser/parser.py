@@ -14,22 +14,22 @@ logger = get_logger(__name__)
 decoder = JSONDecoder()
 
 
-def main(event, client_s3=boto3.client('s3'), client_sqs=boto3.client('sqs')):
+def main(event, client_s3=boto3.client('s3'), client_sns=boto3.client('sns')):
     logger.info('event', event)
-    queue_url = os.environ.get('LOG_ALERT_QUEUE_URL')
-    s3_objects = validate_and_get_s3_object_info(event, queue_url)
+    topic_arn = os.environ.get('LOG_ALERT_TOPIC_ARN')
+    s3_objects = validate_and_get_s3_object_info(event, topic_arn)
     alerts = []
     for s3_object in s3_objects:
         log_data = get_log_data(s3_object, client_s3)
         alerts += parse_log_data(log_data)
-    enqueue(alerts, queue_url, client_sqs)
+    publish(alerts, topic_arn, client_sns)
 
 
-def validate_and_get_s3_object_info(event, queue_url):
-    if not isinstance(queue_url, str):
-        raise TypeError('queue_url is not string.')
-    if len(queue_url) == 0:
-        raise ValueError('queue_url is empty string.')
+def validate_and_get_s3_object_info(event, topic_arn):
+    if not isinstance(topic_arn, str):
+        raise TypeError('topic_arn is not string.')
+    if len(topic_arn) == 0:
+        raise ValueError('topic_arn is empty string.')
 
     result = []
     for i, record in enumerate(event['Records']):
@@ -90,19 +90,9 @@ def parse_log_data(log_data):
     return result
 
 
-def enqueue(alert_data, queue_url, sqs):
-    if len(alert_data) > 10:
-        enqueue(alert_data[:10], queue_url, sqs)
-        enqueue(alert_data[10:], queue_url, sqs)
-        return
-    option = {
-        'QueueUrl': queue_url,
-        'Entries': [
-            {
-                'Id': str(uuid4()),
-                'MessageBody': json.dumps(x)
-            }
-            for x in alert_data
-        ]
-    }
-    sqs.send_message_batch(**option)
+def publish(alerts, topic_arn, sns):
+    for alert in alerts:
+        sns.publish(
+            TopicArn=topic_arn,
+            Message=json.dumps(alert)
+        )

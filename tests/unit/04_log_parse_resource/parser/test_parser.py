@@ -1,7 +1,7 @@
 import json
 import os
-from parser import (enqueue, get_log_data, json_iter_load, main,
-                    parse_log_data, validate_and_get_s3_object_info)
+from parser import (get_log_data, json_iter_load, main,
+                    parse_log_data, validate_and_get_s3_object_info, publish)
 
 import pytest
 
@@ -357,68 +357,9 @@ class TestParseLogData(object):
         assert actual == expected
 
 
-class TestEnqueue(object):
+class TestPublish(object):
     @pytest.mark.parametrize(
-        'alert_data, expected', [
-            (
-                [
-                    {'test': 'data'}
-                ],
-                {'test': 'data'}
-            )
-        ]
-    )
-    def test_single(self, sqs, create_sqs_queue, alert_data, expected):
-        enqueue(alert_data, create_sqs_queue, sqs)
-
-        resp = sqs.receive_message(
-            QueueUrl=create_sqs_queue
-        )
-
-        actual = resp['Messages'][0]['Body']
-        assert json.loads(actual) == expected
-
-    @pytest.mark.parametrize(
-        'alert_data', [
-            (
-                [
-                    {'title': '黄昏色の詠使い', 'number': 1, 'subtitle': 'イヴは夜明けに微笑んで'},
-                    {'title': '黄昏色の詠使い', 'number': 2, 'subtitle': '奏でる少女の道行きは'},
-                    {'title': '黄昏色の詠使い', 'number': 3, 'subtitle': 'アマデウスの詩、謳え敗者の王'},
-                    {'title': '黄昏色の詠使い', 'number': 4, 'subtitle': '踊る世界、イヴの調律'},
-                    {'title': '黄昏色の詠使い', 'number': 5, 'subtitle': '全ての歌を夢見る子供たち'},
-                    {'title': '黄昏色の詠使い', 'number': 6, 'subtitle': 'そしてシャオの福音来たり'},
-                    {'title': '黄昏色の詠使い', 'number': 7, 'subtitle': '新約の扉　汝ミクヴァの洗礼よ'},
-                    {'title': '黄昏色の詠使い', 'number': 8, 'subtitle': '百億の星にリリスは祈り'},
-                    {'title': '黄昏色の詠使い', 'number': 9, 'subtitle': 'ソフィア、詠と絆と涙を抱いて'},
-                    {'title': '黄昏色の詠使い', 'number': 10, 'subtitle': '夜明け色の詠使い'},
-                ]
-            )
-        ]
-    )
-    def test_multi(self, sqs, create_sqs_queue, alert_data):
-        enqueue(alert_data, create_sqs_queue, sqs)
-
-        resp = sqs.receive_message(
-            QueueUrl=create_sqs_queue,
-            MaxNumberOfMessages=10
-        )
-        ordered = []
-        for message in resp['Messages']:
-            body = json.loads(message['Body'])
-            flag = False
-            for i, data in enumerate(alert_data):
-                if body == data:
-                    flag = True
-                    ordered.append(i)
-                    break
-            assert flag
-
-        for i in range(10):
-            assert i in ordered
-
-    @pytest.mark.parametrize(
-        'alert_data', [
+        'alerts', [
             (
                 [
                     {'title': 'SHIROBAKO', 'number': '#01', 'subtitle': '明日に向かって、えくそだすっ！'},
@@ -449,19 +390,19 @@ class TestEnqueue(object):
             )
         ]
     )
-    def test_overflow(self, sqs, create_sqs_queue, alert_data):
-        enqueue(alert_data, create_sqs_queue, sqs)
+    def test_normal(self, sns, create_sns_topic, alerts):
+        publish(alerts, create_sns_topic, sns)
 
 
 @pytest.mark.parametrize(
     'delete_environ', [
-        (['LOG_ALERT_QUEUE_URL'])
+        (['LOG_ALERT_TOPIC_ARN'])
     ], indirect=True
 )
 @pytest.mark.usefixtures('delete_environ')
 class TestMain(object):
     @pytest.mark.parametrize(
-        'queue_url, event, error', [
+        'topic_arn, event, error', [
             (
                 None,
                 {},
@@ -550,9 +491,9 @@ class TestMain(object):
             )
         ]
     )
-    def test_exception(self, queue_url, event, error):
+    def test_exception(self, topic_arn, event, error):
         with pytest.raises(error):
-            os.environ['LOG_ALERT_QUEUE_URL'] = queue_url
+            os.environ['LOG_ALERT_TOPIC_ARN'] = topic_arn
             main(event)
 
     @pytest.mark.parametrize(
@@ -600,16 +541,9 @@ class TestMain(object):
         ], indirect=['create_s3_bucket', 's3_put_gz_files']
     )
     @pytest.mark.usefixtures('create_s3_bucket', 's3_put_gz_files')
-    def test_single(self, s3, sqs, create_sqs_queue, event, expected):
-        os.environ['LOG_ALERT_QUEUE_URL'] = create_sqs_queue
-        main(event, client_s3=s3, client_sqs=sqs)
-
-        resp = sqs.receive_message(
-            QueueUrl=create_sqs_queue
-        )
-
-        actual = resp['Messages'][0]['Body']
-        assert json.loads(actual) == expected
+    def test_single(self, s3, sns, create_sns_topic, event, expected):
+        os.environ['LOG_ALERT_TOPIC_ARN'] = create_sns_topic
+        main(event, client_s3=s3, client_sns=sns)
 
     @pytest.mark.parametrize(
         'create_s3_bucket, s3_put_gz_files, event, alert_data', [
@@ -834,24 +768,6 @@ class TestMain(object):
         ], indirect=['create_s3_bucket', 's3_put_gz_files']
     )
     @pytest.mark.usefixtures('create_s3_bucket', 's3_put_gz_files')
-    def test_multi(self, s3, sqs, create_sqs_queue, event, alert_data):
-        os.environ['LOG_ALERT_QUEUE_URL'] = create_sqs_queue
-        main(event, client_s3=s3, client_sqs=sqs)
-
-        resp = sqs.receive_message(
-            QueueUrl=create_sqs_queue,
-            MaxNumberOfMessages=10
-        )
-        ordered = []
-        for message in resp['Messages']:
-            body = json.loads(message['Body'])
-            flag = False
-            for i, data in enumerate(alert_data):
-                if body == data:
-                    flag = True
-                    ordered.append(i)
-                    break
-            assert flag
-
-        for i in range(10):
-            assert i in ordered
+    def test_multi(self, s3, sns, create_sns_topic, event, alert_data):
+        os.environ['LOG_ALERT_TOPIC_ARN'] = create_sns_topic
+        main(event, client_s3=s3, client_sns=sns)

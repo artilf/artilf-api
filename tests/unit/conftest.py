@@ -29,6 +29,11 @@ def sqs():
     return boto3.client('sqs', endpoint_url='http://localhost:4576')
 
 
+@pytest.fixture(scope='session')
+def sns():
+    return boto3.client('sns', endpoint_url='http://localhost:4575')
+
+
 @pytest.fixture(scope='function')
 def dummy_context(request):
     return DummyContext(request.param)
@@ -89,3 +94,17 @@ def create_sqs_queue(sqs):
     url = resp['QueueUrl']
     yield url
     sqs.delete_queue(QueueUrl=url)
+
+
+@pytest.fixture(scope='function')
+def create_sns_topic(sns):
+    resp = sns.create_topic(
+        Name=str(uuid4())
+    )
+    arn = resp['TopicArn']
+
+    yield arn
+
+    sns.delete_topic(
+        TopicArn=arn
+    )
