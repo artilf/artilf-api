@@ -40,7 +40,7 @@ Resources:
         DefaultSlackIncommingWebhookUrl: !Ref DefaultSlackIncommingWebhookUrl
 
   LogAlertSNSTopic:
-    Type: AWS:SNS:Topic
+    Type: AWS::SNS::Topic
 
   NotifierFunction:
     Type: AWS::Serverless::Function

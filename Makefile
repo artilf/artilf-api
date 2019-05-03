@@ -87,3 +87,5 @@ itg-log-parse-create:
 itg-log-parse-remove:
 	@aws cloudformation delete-stack \
 		--stack-name $(ITG_TEST_LOG_PARSE)
+	@aws cloudformation wait stack-delete-complete \
+		--stack-name $(ITG_TEST_LOG_PARSE)
