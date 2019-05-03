@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: integration test for log parse resource
+
+Parameters:
+  Env:
+    Type: String
+    Default: log-parse
+
+Resources:
+  BaseResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/01_base_resource.yml
+
+  DummySNSTopic:
+    Type: AWS::SNS::Topic
+
+  DummyQueue:
+    Type: AWS::SQS::Queue
+
+  LogParseResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/04_log_parse_resource.yml
+      Parameters:
+        Env: !Ref Env
+        CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
+        ErrorAlertSNSTopicArn: !Ref DummySNSTopic
+        LogAlertQueueUrl: !Ref DummyQueue
+
+Outputs:
+  DummyQueueUrl:
+    Value: !Ref DummyQueue

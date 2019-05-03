@@ -1,5 +1,7 @@
 SHELL = /usr/bin/env bash -xeuo pipefail
 
+ITG_TEST_LOG_PARSE:=itg-test-artilt-api-log-parse
+
 .PHONY: \
 	isort \
 	lint \
@@ -8,6 +10,8 @@ SHELL = /usr/bin/env bash -xeuo pipefail
 	test-unit \
 	localstack-up \
 	localstack-down \
+	itg-log-parse-create \
+	itg-log-parse-remove
 
 isort:
 	@isort -rc \
@@ -67,3 +71,19 @@ localstack-up:
 
 localstack-down:
 	docker-compose down
+
+itg-log-parse-create:
+	@aws cloudformation package \
+		--template-file src/04_log_parse_resource_test.yml \
+		--s3-bucket bibl-cfn-artifacts-$(AWS_ACCOUNT_ID)-$(AWS_ENV) \
+		--output-template-file packaged_template.yml
+	@aws cloudformation deploy \
+		--template-file packaged_template.yml \
+		--stack-name $(ITG_TEST_LOG_PARSE) \
+		--role-arn $(AWS_CFN_DEPLOY_ROLE_ARN) \
+		--capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+		--no-fail-on-empty-changeset
+
+itg-log-parse-remove:
+	@aws run aws cloudformation delete-stack \
+		--stack-name $(ITG_TEST_LOG_PARSE)

@@ -84,6 +84,32 @@ jobs:
       - <<: *notify_success_to_slack
       - <<: *notify_failed_to_slack
 
+  test_integration_log_parse:
+    <<: *primary_containers
+    steps:
+      - checkout
+      - <<: *notify_start_to_slack
+      - <<: *restore_dependencies
+      - <<: *install_dependencies
+      - <<: *save_dependencies
+      - run:
+          name: deploy itg test resource
+          command: |
+            source .venv/bin/activate
+
+            eval "$(./guess.sh -e development -a)"
+            make itg-log-parse-create
+      - run:
+          name: remove itg test resource
+          command: |
+            source .venv/bin/activate
+
+            eval "$(./guess.sh -e development -a)"
+            make itg-log-parse-remove
+          when: always
+      - <<: *notify_success_to_slack
+      - <<: *notify_failed_to_slack
+
   deploy_development:
     <<: *primary_containers
     steps:
@@ -157,12 +183,12 @@ workflows:
   artilf_api_development:
     jobs:
       - test_unit
-      - test_integration:
+      - test_integration_log_parse:
           requires:
             - test_unit
       - deploy_development:
           requires:
-            - test_integration
+            - test_integration_log_parse
       - test_e2e_development:
           requires:
             - deploy_development
@@ -175,7 +201,7 @@ workflows:
               only: /.*/
             branches:
               ignore: /.*/
-      - test_integration:
+      - test_integration_log_parse:
           requires:
             - test_unit
           filters:
@@ -185,7 +211,7 @@ workflows:
               ignore: /.*/
       - deploy_development:
           requires:
-            - test_integration
+            - test_integration_log_parse
           filters:
             tags:
               only: /.*/
