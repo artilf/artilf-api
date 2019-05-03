@@ -33,16 +33,23 @@ def validate_and_get_s3_object_info(event, topic_arn):
     result = []
     for i, record in enumerate(event['Records']):
         try:
-            option = {
-                'Bucket': record['s3']['bucket']['name'],
-                'Key': record['s3']['object']['key']
-            }
-            for k, v in option.items():
-                if not isinstance(v, str):
-                    raise TypeError(f'{k} is not string.')
-                if len(v) == 0:
-                    raise ValueError(f'{k} is empty string.')
-            result.append(option)
+            body = record['body']
+            s3_event = json.loads(body)
+            for j, s3_record in enumerate(s3_event['Records']):
+                try:
+                    option = {
+                        'Bucket': s3_record['s3']['bucket']['name'],
+                        'Key': s3_record['s3']['object']['key']
+                    }
+                    for k, v in option.items():
+                        if not isinstance(v, str):
+                            raise TypeError(f'{k} is not string.')
+                        if len(v) == 0:
+                            raise ValueError(f'{k} is empty string.')
+                    result.append(option)
+                except Exception as e:
+                    logger.warning(f'Exception occurred in event["Records"][{i}][{j}]: {e}')
+                    raise
         except Exception as e:
             logger.warning(f'Exception occurred in event["Records"][{i}]: {e}')
             raise

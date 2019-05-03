@@ -8,115 +8,182 @@ import pytest
 
 class TestValidateAndGetS3ObjectInfo(object):
     @pytest.mark.parametrize(
-        'queue_url, error', [
-            (1, TypeError),
-            ('', ValueError)
-        ]
-    )
-    def test_exception_queue_url(self, queue_url, error):
-        with pytest.raises(error):
-            validate_and_get_s3_object_info(None, queue_url)
-
-    @pytest.mark.parametrize(
-        'event, error', [
+        'topic_arn, event, error', [
             (
+                1,
                 None,
                 TypeError
             ),
             (
-                {},
+                '',
+                None,
+                ValueError
+            ),
+            (
+                'test_topic',
+                1,
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': 1
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [1]
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [{}]
+                },
                 KeyError
             ),
             (
-                {'Records': 1},
-                TypeError
-            ),
-            (
-                {
-                    'Records': [
-                        1
-                    ]
-                },
-                TypeError
-            ),
-            (
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': 1
-                            }
+                            'body': 1
                         }
                     ]
                 },
                 TypeError
             ),
             (
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 1},
-                                'object': {'key': 'aaa'}
-                            }
+                            'body': json.dumps({})
+                        }
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': 1
+                            })
                         }
                     ]
                 },
                 TypeError
             ),
             (
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': ''},
-                                'object': {'key': 'aaa'}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    1
+                                ]
+                            })
+                        }
+                    ]
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    {'s3': {}}
+                                ]
+                            })
+                        }
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 1}
+                                        }
+                                    }
+                                ]
+                            })
+                        }
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': ''},
+                                            'object': {'key': 'aaa'}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
                 ValueError
             ),
             (
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': 1}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'aaa'},
+                                            'object': {'key': 1}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
                 TypeError
             ),
             (
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': ''}
-                            }
-                        }
-                    ]
-                },
-                ValueError
-            ),
-            (
-                {
-                    'Records': [
-                        {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': 'bbb'}
-                            }
-                        },
-                        {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': ''}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'aaa'},
+                                            'object': {'key': ''}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
@@ -124,9 +191,9 @@ class TestValidateAndGetS3ObjectInfo(object):
             )
         ]
     )
-    def test_exception_event(self, event, error):
+    def test_exception(self, topic_arn, event, error):
         with pytest.raises(error):
-            validate_and_get_s3_object_info(event, 'a')
+            validate_and_get_s3_object_info(event, topic_arn)
 
     @pytest.mark.parametrize(
         'event, expected', [
@@ -134,34 +201,27 @@ class TestValidateAndGetS3ObjectInfo(object):
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': 'bbb'}
-                            }
-                        },
-                        {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': 'ccc'}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'aaa'},
+                                            'object': {'key': 'bbb'}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
                 [
-                    {
-                        'Bucket': 'aaa',
-                        'Key': 'bbb'
-                    },
-                    {
-                        'Bucket': 'aaa',
-                        'Key': 'ccc'
-                    }
+                    {'Bucket': 'aaa', 'Key': 'bbb'}
                 ]
             )
         ]
     )
     def test_normal(self, event, expected):
-        actual = validate_and_get_s3_object_info(event, 'a')
+        actual = validate_and_get_s3_object_info(event, 'aaa')
         assert actual == expected
 
 
@@ -404,86 +464,180 @@ class TestMain(object):
     @pytest.mark.parametrize(
         'topic_arn, event, error', [
             (
+                1,
                 None,
-                {},
                 TypeError
             ),
             (
                 '',
-                {},
+                None,
                 ValueError
             ),
             (
-                'aaaa',
-                None,
+                'test_topic',
+                1,
                 TypeError
             ),
             (
-                'aaaa',
-                {},
+                'test_topic',
+                {
+                    'Records': 1
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [1]
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [{}]
+                },
                 KeyError
             ),
             (
-                'aaaa',
-                {'Records': 1},
-                TypeError
-            ),
-            (
-                'aaaa',
-                {'Records': [1]},
-                TypeError
-            ),
-            (
-                'aaaa',
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 1},
-                                'object': {'key': 'aaa'}
-                            }
+                            'body': 1
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'aaaa',
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': ''},
-                                'object': {'key': 'aaa'}
-                            }
+                            'body': json.dumps({})
+                        }
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': 1
+                            })
+                        }
+                    ]
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    1
+                                ]
+                            })
+                        }
+                    ]
+                },
+                TypeError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    {'s3': {}}
+                                ]
+                            })
+                        }
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 1}
+                                        }
+                                    }
+                                ]
+                            })
+                        }
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'test_topic',
+                {
+                    'Records': [
+                        {
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': ''},
+                                            'object': {'key': 'aaa'}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
                 ValueError
             ),
             (
-                'aaaa',
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': 1}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'aaa'},
+                                            'object': {'key': 1}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'aaaa',
+                'test_topic',
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'aaa'},
-                                'object': {'key': ''}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'aaa'},
+                                            'object': {'key': ''}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
@@ -523,10 +677,16 @@ class TestMain(object):
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'test_bucket'},
-                                'object': {'key': '1223334444'}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'test_bucket'},
+                                            'object': {'key': '1223334444'}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
@@ -649,16 +809,22 @@ class TestMain(object):
                 {
                     'Records': [
                         {
-                            's3': {
-                                'bucket': {'name': 'test_bucket'},
-                                'object': {'key': '1223334444'}
-                            }
-                        },
-                        {
-                            's3': {
-                                'bucket': {'name': 'test_bucket'},
-                                'object': {'key': '4444333221'}
-                            }
+                            'body': json.dumps({
+                                'Records': [
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'test_bucket'},
+                                            'object': {'key': '1223334444'}
+                                        }
+                                    },
+                                    {
+                                        's3': {
+                                            'bucket': {'name': 'test_bucket'},
+                                            'object': {'key': '4444333221'}
+                                        }
+                                    }
+                                ]
+                            })
                         }
                     ]
                 },
