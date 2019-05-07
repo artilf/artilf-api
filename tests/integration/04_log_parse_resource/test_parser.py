@@ -2,12 +2,12 @@ import json
 from gzip import GzipFile
 from io import BytesIO
 from time import sleep
+import pytest
 
 
-def test_normal(s3, sqs, stack_outputs):
+@pytest.fixture(scope='function')
+def fixture(s3, sqs, stack_outputs):
     bucket = stack_outputs['DummyBucketName']
-    s3_event_queue_url = stack_outputs['S3EventQueueUrl']
-    receive_queue_url = stack_outputs['DummyReceiveQueueUrl']
     key = '1223334444'
 
     expected = {
@@ -51,6 +51,19 @@ def test_normal(s3, sqs, stack_outputs):
         ]
     }
 
+    yield event, expected
+
+    s3.delete_object(
+        Bucket=bucket,
+        Key=key
+    )
+
+
+def test_normal(sqs, stack_outputs, fixture):
+    s3_event_queue_url = stack_outputs['S3EventQueueUrl']
+    receive_queue_url = stack_outputs['DummyReceiveQueueUrl']
+    event, expected = fixture
+
     sqs.send_message(
         QueueUrl=s3_event_queue_url,
         MessageBody=json.dumps(event)
@@ -69,10 +82,5 @@ def test_normal(s3, sqs, stack_outputs):
     )
     raw_body = json.loads(record['Body'])
     body = json.loads(raw_body['Message'])
-
-    s3.delete_object(
-        Bucket=bucket,
-        Key=key
-    )
 
     assert body == expected

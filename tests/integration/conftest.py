@@ -22,6 +22,8 @@ def get_service_object(name, botocore_session, is_resource=False):
 
 @pytest.fixture(scope='session')
 def botocore_session():
+    if os.getenv('CIRCLECI'):
+        return None
     cache_dir = str(pathlib.Path.home().joinpath('.aws/cli/cache'))
 
     session = botocore.session.get_session()
