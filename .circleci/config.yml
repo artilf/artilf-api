@@ -113,7 +113,6 @@ jobs:
 
             eval "$(./guess.sh -e development -a)"
             make itg-log-parse-remove
-          when: always
       - <<: *notify_success_to_slack
       - <<: *notify_failed_to_slack
 
