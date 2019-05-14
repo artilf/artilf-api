@@ -52,6 +52,8 @@ def fixture(s3, sqs, stack_outputs):
         ]
     }
 
+    sleep(30)
+
     yield (event, expected)
 
     s3.delete_object(

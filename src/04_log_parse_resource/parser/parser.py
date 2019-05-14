@@ -77,6 +77,7 @@ def get_log_data(s3_object, s3_client):
 
 
 def parse_log_data(log_data):
+    logger.info('log_data in parse_log_data', log_data)
     result = []
     for log in log_data:
         for event in log['logEvents']:
