@@ -76,7 +76,6 @@ def test_normal(sqs, stack_outputs, fixture):
         QueueUrl=receive_queue_url,
         MaxNumberOfMessages=1
     )
-    print(resp)
     record = resp['Messages'][0]
     sqs.delete_message(
         QueueUrl=receive_queue_url,
