@@ -70,6 +70,7 @@ def json_iter_load(text):
 
 
 def get_log_data(s3_object, s3_client):
+    logger.info('s3_object in get_log_data', s3_object)
     resp = s3_client.get_object(**s3_object)
     binary = GzipFile(fileobj=resp['Body']).read()
     return list(json_iter_load(binary.decode()))

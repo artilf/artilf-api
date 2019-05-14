@@ -12,7 +12,7 @@ def get_service_object(name, botocore_session, is_resource=False):
     if os.getenv('CIRCLECI'):
         session = boto3
     else:
-        session = boto3.Session(botocore_session=botocore_session, profile_name=os.environ['AWS_PROFILE'])
+        session = boto3.Session(profile_name=os.environ['AWS_PROFILE'])
 
     if is_resource:
         return session.resource(name)

@@ -11,7 +11,8 @@ ITG_TEST_LOG_PARSE:=itg-test-artilt-api-log-parse
 	localstack-up \
 	localstack-down \
 	itg-log-parse-create \
-	itg-log-parse-remove
+	itg-log-parse-remove \
+	itg-log-parse-test
 
 isort:
 	@isort -rc \

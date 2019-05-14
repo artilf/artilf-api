@@ -52,7 +52,7 @@ def fixture(s3, sqs, stack_outputs):
         ]
     }
 
-    yield event, expected
+    yield (event, expected)
 
     s3.delete_object(
         Bucket=bucket,
@@ -76,6 +76,7 @@ def test_normal(sqs, stack_outputs, fixture):
         QueueUrl=receive_queue_url,
         MaxNumberOfMessages=1
     )
+    print(resp)
     record = resp['Messages'][0]
     sqs.delete_message(
         QueueUrl=receive_queue_url,
