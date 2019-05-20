@@ -87,3 +87,7 @@ def normal(sqs, stack_outputs, fixture):
     body = json.loads(raw_body['Message'])
 
     assert body == expected
+
+
+def test_true():
+    assert True
