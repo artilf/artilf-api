@@ -62,7 +62,7 @@ def fixture(s3, sqs, stack_outputs):
     )
 
 
-def test_normal(sqs, stack_outputs, fixture):
+def normal(sqs, stack_outputs, fixture):
     s3_event_queue_url = stack_outputs['S3EventQueueUrl']
     receive_queue_url = stack_outputs['DummyReceiveQueueUrl']
     event, expected = fixture
