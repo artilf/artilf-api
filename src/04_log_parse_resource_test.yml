@@ -73,5 +73,5 @@ Outputs:
   DummyBucketName:
     Value: !Ref DummyS3Bucket
 
-  S3EventQueueUrl:
-    Value: !GetAtt LogParseResourceStack.Outputs.S3EventQueueUrl
+  S3EventTopicArn:
+    Value: !GetAtt LogParseResourceStack.Outputs.S3EventTopicArn

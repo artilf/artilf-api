@@ -20,170 +20,178 @@ class TestValidateAndGetS3ObjectInfo(object):
                 ValueError
             ),
             (
-                'test_topic',
-                1,
+                'aaa',
+                None,
                 TypeError
             ),
             (
-                'test_topic',
-                {
-                    'Records': 1
-                },
+                'aaa',
+                {'Records': 1},
                 TypeError
             ),
             (
-                'test_topic',
-                {
-                    'Records': [1]
-                },
-                TypeError
-            ),
-            (
-                'test_topic',
-                {
-                    'Records': [{}]
-                },
-                KeyError
-            ),
-            (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
-                        {
-                            'body': 1
-                        }
+                        1
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
+                {
+                    'Records': [
+                        {}
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({})
+                            'Sns': {
+                                'Message': json.dumps({})
+                            }
                         }
                     ]
                 },
                 KeyError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': 1
-                            })
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': 1
+                                })
+                            }
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    1
-                                ]
-                            })
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        1
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {'s3': {}}
-                                ]
-                            })
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {}
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 KeyError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 1}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 1},
+                                                'object': {'key': 'b'}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
-                KeyError
+                TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': ''},
-                                            'object': {'key': 'aaa'}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': ''},
+                                                'object': {'key': 'b'}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 ValueError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'aaa'},
-                                            'object': {'key': 1}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a'},
+                                                'object': {'key': 1}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'aaa'},
-                                            'object': {'key': ''}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a'},
+                                                'object': {'key': ''}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
@@ -201,21 +209,75 @@ class TestValidateAndGetS3ObjectInfo(object):
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'aaa'},
-                                            'object': {'key': 'bbb'}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a'},
+                                                'object': {'key': 'b'}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 [
-                    {'Bucket': 'aaa', 'Key': 'bbb'}
+                    {'Bucket': 'a', 'Key': 'b'}
+                ]
+            ),
+            (
+                {
+                    'Records': [
+                        {
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a1'},
+                                                'object': {'key': 'b1'}
+                                            }
+                                        },
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a2'},
+                                                'object': {'key': 'b2'}
+                                            }
+                                        }
+                                    ]
+                                })
+                            }
+                        },
+                        {
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a3'},
+                                                'object': {'key': 'b3'}
+                                            }
+                                        },
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a4'},
+                                                'object': {'key': 'b4'}
+                                            }
+                                        }
+                                    ]
+                                })
+                            }
+                        }
+                    ]
+                },
+                [
+                    {'Bucket': 'a1', 'Key': 'b1'},
+                    {'Bucket': 'a2', 'Key': 'b2'},
+                    {'Bucket': 'a3', 'Key': 'b3'},
+                    {'Bucket': 'a4', 'Key': 'b4'},
                 ]
             )
         ]
@@ -474,170 +536,178 @@ class TestMain(object):
                 ValueError
             ),
             (
-                'test_topic',
-                1,
+                'aaa',
+                None,
                 TypeError
             ),
             (
-                'test_topic',
-                {
-                    'Records': 1
-                },
+                'aaa',
+                {'Records': 1},
                 TypeError
             ),
             (
-                'test_topic',
-                {
-                    'Records': [1]
-                },
-                TypeError
-            ),
-            (
-                'test_topic',
-                {
-                    'Records': [{}]
-                },
-                KeyError
-            ),
-            (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
-                        {
-                            'body': 1
-                        }
+                        1
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
+                {
+                    'Records': [
+                        {}
+                    ]
+                },
+                KeyError
+            ),
+            (
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({})
+                            'Sns': {
+                                'Message': json.dumps({})
+                            }
                         }
                     ]
                 },
                 KeyError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': 1
-                            })
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': 1
+                                })
+                            }
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    1
-                                ]
-                            })
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        1
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {'s3': {}}
-                                ]
-                            })
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {}
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 KeyError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 1}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 1},
+                                                'object': {'key': 'b'}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
-                KeyError
+                TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': ''},
-                                            'object': {'key': 'aaa'}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': ''},
+                                                'object': {'key': 'b'}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 ValueError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'aaa'},
-                                            'object': {'key': 1}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a'},
+                                                'object': {'key': 1}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
                 TypeError
             ),
             (
-                'test_topic',
+                'aaa',
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'aaa'},
-                                            'object': {'key': ''}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'a'},
+                                                'object': {'key': ''}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
@@ -677,16 +747,18 @@ class TestMain(object):
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'test_bucket'},
-                                            'object': {'key': '1223334444'}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'test_bucket'},
+                                                'object': {'key': '1223334444'}
+                                            }
                                         }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },
@@ -809,22 +881,24 @@ class TestMain(object):
                 {
                     'Records': [
                         {
-                            'body': json.dumps({
-                                'Records': [
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'test_bucket'},
-                                            'object': {'key': '1223334444'}
+                            'Sns': {
+                                'Message': json.dumps({
+                                    'Records': [
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'test_bucket'},
+                                                'object': {'key': '1223334444'}
+                                            }
+                                        },
+                                        {
+                                            's3': {
+                                                'bucket': {'name': 'test_bucket'},
+                                                'object': {'key': '4444333221'}
+                                            }
                                         }
-                                    },
-                                    {
-                                        's3': {
-                                            'bucket': {'name': 'test_bucket'},
-                                            'object': {'key': '4444333221'}
-                                        }
-                                    }
-                                ]
-                            })
+                                    ]
+                                })
+                            }
                         }
                     ]
                 },

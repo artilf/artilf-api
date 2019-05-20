@@ -16,6 +16,7 @@ decoder = JSONDecoder()
 def main(event, client_s3=boto3.client('s3'), client_sns=boto3.client('sns')):
     logger.info('event', event)
     topic_arn = os.environ.get('LOG_ALERT_TOPIC_ARN')
+    logger.info('environ.LOG_ALERT_TOPIC_ARN', topic_arn)
     s3_objects = validate_and_get_s3_object_info(event, topic_arn)
     alerts = []
     for s3_object in s3_objects:
@@ -33,7 +34,7 @@ def validate_and_get_s3_object_info(event, topic_arn):
     result = []
     for i, record in enumerate(event['Records']):
         try:
-            body = record['body']
+            body = record['Sns']['Message']
             s3_event = json.loads(body)
             for j, s3_record in enumerate(s3_event['Records']):
                 try:
@@ -51,7 +52,7 @@ def validate_and_get_s3_object_info(event, topic_arn):
                     logger.warning(f'Exception occurred in event["Records"][{i}][{j}]: {e}')
                     raise
         except Exception as e:
-            logger.warning(f'Exception occurred in event["Records"][{i}]: {e}')
+            logger.warning(f'Exception occurred in event["Records"][{i}]: {e}', exc_info=True)
             raise
 
     return result

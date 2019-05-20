@@ -32,8 +32,8 @@ Globals:
       - !Ref CommonLayerArn
 
 Resources:
-  S3EventQueue:
-    Type: AWS::SQS::Queue
+  S3EventTopic:
+    Type: AWS::SNS::Topic
 
   ParserFunction:
     Type: AWS::Serverless::Function
@@ -42,20 +42,17 @@ Resources:
       CodeUri: 04_log_parse_resource/parser
       Handler: index.handler
       Policies:
-        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
-        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
         - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       Environment:
         Variables:
           LOG_ALERT_TOPIC_ARN: !Ref LogAlertSNSTopicArn
       Events:
-        GetFromSQS:
-          Type: SQS
+        GetFromSNS:
+          Type: SNS
           Properties:
-            Queue: !GetAtt S3EventQueue.Arn
-            BatchSize: 10
-            Enabled: true
+            Topic: !Ref S3EventTopic
 
   ParserLogGroup:
     Type: AWS::Logs::LogGroup
@@ -89,5 +86,5 @@ Resources:
       ComparisonOperator: GreaterThanOrEqualToThreshold
 
 Outputs:
-  S3EventQueueUrl:
-    Value: !Ref S3EventQueue
+  S3EventTopicArn:
+    Value: !Ref S3EventTopic
