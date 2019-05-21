@@ -42,17 +42,11 @@ def fixture(s3, sqs, stack_outputs):
     )
 
     event = {
-        'Records': [
-            {
-                's3': {
-                    'bucket': {'name': bucket},
-                    'object': {'key': key}
-                }
-            }
-        ]
+        's3': {
+            'bucket': {'name': 'test_bucket'},
+            'object': {'key': '1223334444'}
+        }
     }
-
-    sleep(30)
 
     yield (event, expected)
 
@@ -62,8 +56,8 @@ def fixture(s3, sqs, stack_outputs):
     )
 
 
-def normal(sqs, stack_outputs, fixture):
-    s3_event_queue_url = stack_outputs['S3EventQueueUrl']
+def test_normal(sqs, stack_outputs, fixture):
+    s3_event_queue_url = stack_outputs['S3EventTopicArn']
     receive_queue_url = stack_outputs['DummyReceiveQueueUrl']
     event, expected = fixture
 
@@ -87,7 +81,3 @@ def normal(sqs, stack_outputs, fixture):
     body = json.loads(raw_body['Message'])
 
     assert body == expected
-
-
-def test_true():
-    assert True
