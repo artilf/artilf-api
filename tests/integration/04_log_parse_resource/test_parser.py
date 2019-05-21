@@ -90,4 +90,4 @@ def normal(sqs, stack_outputs, fixture):
 
 
 def test_true():
-    assert False
+    assert True

@@ -518,7 +518,7 @@ class TestPublish(object):
 
 @pytest.mark.parametrize(
     'delete_environ', [
-        (['LOG_ALERT_TOPIC_ARN'])
+        (['PUBLISH_TARGET_TOPIC_ARN'])
     ], indirect=True
 )
 @pytest.mark.usefixtures('delete_environ')
@@ -717,7 +717,7 @@ class TestMain(object):
     )
     def test_exception(self, topic_arn, event, error):
         with pytest.raises(error):
-            os.environ['LOG_ALERT_TOPIC_ARN'] = topic_arn
+            os.environ['PUBLISH_TARGET_TOPIC_ARN'] = topic_arn
             main(event)
 
     @pytest.mark.parametrize(
@@ -774,7 +774,7 @@ class TestMain(object):
     )
     @pytest.mark.usefixtures('create_s3_bucket', 's3_put_gz_files')
     def test_single(self, s3, sns, create_sns_topic, event, expected):
-        os.environ['LOG_ALERT_TOPIC_ARN'] = create_sns_topic
+        os.environ['PUBLISH_TARGET_TOPIC_ARN'] = create_sns_topic
         main(event, client_s3=s3, client_sns=sns)
 
     @pytest.mark.parametrize(
@@ -1009,5 +1009,5 @@ class TestMain(object):
     )
     @pytest.mark.usefixtures('create_s3_bucket', 's3_put_gz_files')
     def test_multi(self, s3, sns, create_sns_topic, event, alert_data):
-        os.environ['LOG_ALERT_TOPIC_ARN'] = create_sns_topic
+        os.environ['PUBLISH_TARGET_TOPIC_ARN'] = create_sns_topic
         main(event, client_s3=s3, client_sns=sns)

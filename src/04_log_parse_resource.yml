@@ -16,7 +16,7 @@ Parameters:
   ErrorAlertSNSTopicArn:
     Type: String
 
-  LogAlertSNSTopicArn:
+  PublishTargetSNSTopicArn:
     Type: String
 
 Globals:
@@ -47,7 +47,7 @@ Resources:
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
       Environment:
         Variables:
-          LOG_ALERT_TOPIC_ARN: !Ref LogAlertSNSTopicArn
+          PUBLISH_TARGET_TOPIC_ARN: !Ref PublishTargetSNSTopicArn
       Events:
         GetFromSNS:
           Type: SNS

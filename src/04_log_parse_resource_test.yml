@@ -64,7 +64,7 @@ Resources:
         Env: !Ref Env
         CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
         ErrorAlertSNSTopicArn: !Ref DummyAlertSNSTopic
-        LogAlertSNSTopicArn: !Ref DummyLogSNSTopic
+        PublishTargetSNSTopicArn: !Ref DummyLogSNSTopic
 
 Outputs:
   DummyReceiveQueueUrl:

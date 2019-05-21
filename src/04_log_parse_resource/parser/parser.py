@@ -15,8 +15,8 @@ decoder = JSONDecoder()
 
 def main(event, client_s3=boto3.client('s3'), client_sns=boto3.client('sns')):
     logger.info('event', event)
-    topic_arn = os.environ.get('LOG_ALERT_TOPIC_ARN')
-    logger.info('environ.LOG_ALERT_TOPIC_ARN', topic_arn)
+    topic_arn = os.environ.get('PUBLISH_TARGET_TOPIC_ARN')
+    logger.info('environ.PUBLISH_TARGET_TOPIC_ARN', topic_arn)
     s3_objects = validate_and_get_s3_object_info(event, topic_arn)
     alerts = []
     for s3_object in s3_objects:
