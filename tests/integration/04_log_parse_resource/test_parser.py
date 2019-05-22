@@ -11,13 +11,22 @@ def fixture(s3, sqs, stack_outputs):
     bucket = stack_outputs['DummyBucketName']
     key = '1223334444'
 
-    expected = {
-        'logGroup': 'test_group',
-        'logStream': 'test_stream',
-        'datetime': '2019-02-26 10:33:26.145000+09:00',
-        'message': '{"levelname": "ERROR", "lambda_request_id": "test_id"}',
-        'request_id': 'test_id'
-    }
+    expected = [
+        {
+            'logGroup': 'test_group',
+            'logStream': 'test_stream',
+            'datetime': '2019-02-26 10:33:26.145000+09:00',
+            'message': '{"levelname": "ERROR", "lambda_request_id": "test_id"}',
+            'request_id': 'test_id'
+        },
+        {
+            'logGroup': 'test_group_2',
+            'logStream': 'test_stream',
+            'datetime': '2019-03-01 21:53:26.145000+09:00',
+            'message': '{"levelname": "ERROR", "lambda_request_id": "test_id_ttt"}',
+            'request_id': 'test_id'
+        }
+    ]
 
     gz_body = '\n'.join([
         json.dumps({
@@ -27,6 +36,16 @@ def fixture(s3, sqs, stack_outputs):
                 {
                     'timestamp': 1551144806145,
                     'message': '{"levelname": "ERROR", "lambda_request_id": "test_id"}'
+                }
+            ]
+        }),
+        json.dumps({
+            'logGroup': 'test_group_2',
+            'logStream': 'test_stream',
+            'logEvents': [
+                {
+                    'timestamp': 1551444806145,
+                    'message': '{"levelname": "ERROR", "lambda_request_id": "test_id_ttt"}'
                 }
             ]
         })
@@ -74,14 +93,18 @@ def test_normal(sqs, sns, stack_outputs, fixture):
 
     resp = sqs.receive_message(
         QueueUrl=receive_queue_url,
-        MaxNumberOfMessages=1
+        MaxNumberOfMessages=2
     )
-    record = resp['Messages'][0]
-    sqs.delete_message(
-        QueueUrl=receive_queue_url,
-        ReceiptHandle=record['ReceiptHandle']
-    )
-    raw_body = json.loads(record['Body'])
-    body = json.loads(raw_body['Message'])
 
-    assert body == expected
+    actual = []
+
+    for record in resp['Messages']:
+        sqs.delete_message(
+            QueueUrl=receive_queue_url,
+            ReceiptHandle=record['ReceiptHandle']
+        )
+        raw_body = json.loads(record['Body'])
+        body = json.loads(raw_body['Message'])
+        actual.append(body)
+
+    assert {x['logGroup']: x for x in actual} == {x['logGroup']: x for x in expected}
