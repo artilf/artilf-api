@@ -45,8 +45,8 @@ def fixture(s3, sqs, stack_outputs):
         'Records': [
             {
                 's3': {
-                    'bucket': {'name': 'test_bucket'},
-                    'object': {'key': '1223334444'}
+                    'bucket': {'name': bucket},
+                    'object': {'key': key}
                 }
             }
         ]
