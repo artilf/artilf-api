@@ -42,10 +42,14 @@ def fixture(s3, sqs, stack_outputs):
     )
 
     event = {
-        's3': {
-            'bucket': {'name': 'test_bucket'},
-            'object': {'key': '1223334444'}
-        }
+        'Records': [
+            {
+                's3': {
+                    'bucket': {'name': 'test_bucket'},
+                    'object': {'key': '1223334444'}
+                }
+            }
+        ]
     }
 
     yield (event, expected)
