@@ -1,9 +1,19 @@
 import json
+import os
 from gzip import GzipFile
 from io import BytesIO
 from time import sleep
 
 import pytest
+
+
+def get_wait_second():
+    result = 60
+    try:
+        result = int(os.environ['ITG_WAIT_SECOND'])
+    except Exception:
+        pass
+    return result
 
 
 @pytest.fixture(scope='function')
@@ -24,7 +34,7 @@ def fixture(s3, sqs, stack_outputs):
             'logStream': 'test_stream',
             'datetime': '2019-03-01 21:53:26.145000+09:00',
             'message': '{"levelname": "ERROR", "lambda_request_id": "test_id_ttt"}',
-            'request_id': 'test_id'
+            'request_id': 'test_id_ttt'
         }
     ]
 
@@ -52,7 +62,7 @@ def fixture(s3, sqs, stack_outputs):
     ])
 
     io = BytesIO()
-    GzipFile(fileobj=io, mode='wb').write(json.dumps(gz_body).encode())
+    GzipFile(fileobj=io, mode='wb').write(gz_body.encode())
 
     s3.put_object(
         Bucket=bucket,
@@ -89,22 +99,22 @@ def test_normal(sqs, sns, stack_outputs, fixture):
         Message=json.dumps(event)
     )
 
-    sleep(30)
-
-    resp = sqs.receive_message(
-        QueueUrl=receive_queue_url,
-        MaxNumberOfMessages=2
-    )
+    sleep(get_wait_second())
 
     actual = []
 
-    for record in resp['Messages']:
-        sqs.delete_message(
+    for _ in range(2):
+        resp = sqs.receive_message(
             QueueUrl=receive_queue_url,
-            ReceiptHandle=record['ReceiptHandle']
+            MaxNumberOfMessages=1
         )
-        raw_body = json.loads(record['Body'])
-        body = json.loads(raw_body['Message'])
-        actual.append(body)
+        for record in resp['Messages']:
+            sqs.delete_message(
+                QueueUrl=receive_queue_url,
+                ReceiptHandle=record['ReceiptHandle']
+            )
+            raw_body = json.loads(record['Body'])
+            body = json.loads(raw_body['Message'])
+            actual.append(body)
 
     assert {x['logGroup']: x for x in actual} == {x['logGroup']: x for x in expected}
