@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: integration test for log parse resource
+
+Parameters:
+  Env:
+    Type: String
+    Default: LogParse
+
+Resources:
+  BaseResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 01_base_resource.yml
+
+  DummyAlertSNSTopic:
+    Type: AWS::SNS::Topic
+
+  DummyReceiveQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      ReceiveMessageWaitTimeSeconds: 20
+      VisibilityTimeout: 0
+
+  DummyLogSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !GetAtt DummyReceiveQueue.Arn
+          Protocol: sqs
+
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": "SQS:SendMessage",
+              "Resource": "*",
+              "Condition": {
+                "ArnEquals": {
+                  "aws:SourceArn": "${DummyLogSNSTopic}"
+                }
+              }
+            }
+          ]
+        }
+      Queues:
+        - !Ref DummyReceiveQueue
+
+  DummyS3Bucket:
+    Type: AWS::S3::Bucket
+
+  LogParseResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 04_log_parse_resource.yml
+      Parameters:
+        Env: !Ref Env
+        CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
+        ErrorAlertSNSTopicArn: !Ref DummyAlertSNSTopic
+        PublishTargetSNSTopicArn: !Ref DummyLogSNSTopic
+
+Outputs:
+  DummyReceiveQueueUrl:
+    Value: !Ref DummyReceiveQueue
+
+  DummyBucketName:
+    Value: !Ref DummyS3Bucket
+
+  S3EventTopicArn:
+    Value: !GetAtt LogParseResourceStack.Outputs.S3EventTopicArn

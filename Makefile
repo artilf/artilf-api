@@ -1,10 +1,18 @@
 SHELL = /usr/bin/env bash -xeuo pipefail
 
+ITG_TEST_LOG_PARSE:=itg-test-artilt-api-log-parse
+
 .PHONY: \
 	isort \
 	lint \
 	clean \
-	deploy
+	deploy \
+	test-unit \
+	localstack-up \
+	localstack-down \
+	itg-log-parse-create \
+	itg-log-parse-remove \
+	itg-log-parse-test
 
 isort:
 	@isort -rc \
@@ -58,3 +66,30 @@ test-unit:
 				python -m pytest $$handler_dir --cov-config=setup.cfg --cov=src/$$resource/$$handler; \
 		done \
 	done
+
+localstack-up:
+	docker-compose up -d
+
+localstack-down:
+	docker-compose down
+
+itg-log-parse-create:
+	@aws cloudformation package \
+		--template-file src/04_log_parse_resource_test.yml \
+		--s3-bucket bibl-cfn-artifacts-$(AWS_ACCOUNT_ID)-$(AWS_ENV) \
+		--output-template-file packaged_template.yml
+	@aws cloudformation deploy \
+		--template-file packaged_template.yml \
+		--stack-name $(ITG_TEST_LOG_PARSE) \
+		--role-arn $(AWS_CFN_DEPLOY_ROLE_ARN) \
+		--capabilities CAPABILITY_IAM CAPABILITY_AUTO_EXPAND \
+		--no-fail-on-empty-changeset
+
+itg-log-parse-remove:
+	@aws cloudformation delete-stack \
+		--stack-name $(ITG_TEST_LOG_PARSE)
+	@aws cloudformation wait stack-delete-complete \
+		--stack-name $(ITG_TEST_LOG_PARSE)
+
+itg-log-parse-test:
+	STACK_NAME=$(ITG_TEST_LOG_PARSE) python -m pytest tests/integration/04_log_parse_resource
