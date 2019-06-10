@@ -35,6 +35,19 @@ Resources:
   S3EventTopic:
     Type: AWS::SNS::Topic
 
+  S3EventTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics:
+        - !Ref S3EventTopic
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action: SNS:Publish
+
   ParserFunction:
     Type: AWS::Serverless::Function
     Properties:
