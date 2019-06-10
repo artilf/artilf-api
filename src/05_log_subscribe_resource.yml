@@ -61,6 +61,7 @@ Resources:
 
   LogPutFirehose:
     Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
       DeliveryStreamType: DirectPut
       ExtendedS3DestinationConfiguration:
         BucketARN: !GetAtt LogPutS3Bucket.Arn
