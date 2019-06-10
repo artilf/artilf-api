@@ -47,6 +47,7 @@ Resources:
             Principal:
               Service: s3.amazonaws.com
             Action: SNS:Publish
+            Resource: !Ref S3EventTopic
 
   ParserFunction:
     Type: AWS::Serverless::Function
