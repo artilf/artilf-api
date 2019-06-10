@@ -17,8 +17,10 @@ Resources:
         Statement:
           - Effect: Allow
             Principal:
-              Service: !Sub logs.${AWS::Region}.amazonaws.com
-            Action: sts:AssumeRole
+              Service:
+                - !Sub logs.${AWS::Region}.amazonaws.com
+            Action:
+              - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess
       Policies:
