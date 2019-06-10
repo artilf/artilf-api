@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Log Subscribe Resources
+
+Parameters:
+  LogS3BucketPutEventSNSTopicArn:
+    Type: String
+
+Resources:
+  CWPutFirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: !Sub logs.${AWS::Region}.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess
+      Policies:
+        - PolicyName: !Sub bibl-pass-policy-${Env}
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - "*"
+
+  FirehosePutS3Role:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+  LogPutS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      LifecycleConfiguration:
+        Rules:
+          - ExpirationInDays: 1
+            Status: Enabled
+      NotificationConfiguration:
+        TopicConfigurations:
+          - Event: s3:ObjectCreated:*
+            Topic: !Ref LogS3BucketPutEventSNSTopicArn
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: Prefix
+                    Value: logs/
+                  - Name: Suffix
+                    Value: ".gz"
+
+  LogPutFirehose:
+    Type: AWS::KinesisFirehose::DeliveryStream
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt LogPutS3Bucket.Arn
+        BufferingHints:
+          IntervalInSeconds: 60
+          SizeInMBs: 1
+        CompressionFormat: GZIP
+        Prefix: logs/
+        RoleARN: !GetAtt FirehosePutS3Role.Arn
+
+Outputs:
+  LogPutFirehoseArn:
+    Value: !GetAtt LogPutFirehose.Arn
+
+  CWPutFirehoseRoleArn:
+    Value: !GetAtt CWPutFirehoseRole.Arn

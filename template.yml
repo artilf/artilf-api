@@ -33,3 +33,11 @@ Resources:
         CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
         ErrorAlertSNSTopicArn: !GetAtt AlertResourceStack.Outputs.ErrorAlertSNSTopicArn
         PublishTargetSNSTopicArn: !GetAtt AlertResourceStack.Outputs.LogAlertSNSTopicArn
+
+  LogSubscribeResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/05_log_subscribe_resource.yml
+      Parameters:
+        Env: !Ref Env
+        LogS3BucketPutEventSNSTopicArn: !GetAtt LogParseResourceStack.Outputs.S3EventTopicArn
