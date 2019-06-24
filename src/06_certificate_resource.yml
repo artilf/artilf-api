@@ -47,6 +47,7 @@ Resources:
       MfaConfiguration: "OFF"
       EmailConfiguration:
         SourceArn: !Ref CognitoSesAddressArn
+        EmailSendingAccount: DEVELOPER
 
   TestAuthClient:
     Type: AWS::Cognito::UserPoolClient
