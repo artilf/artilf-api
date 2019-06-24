@@ -46,7 +46,7 @@ Resources:
   TestAuthClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      RefreshTokenValidation: 30
+      RefreshTokenValidity: 30
       GenerateSecret: true
       UserPoolId: !Ref UserManagementPool
       ExplictAuthFlows:
@@ -55,7 +55,7 @@ Resources:
   WebAuthClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
-      RefreshTokenValidation: 30
+      RefreshTokenValidity: 30
       GenerateSecret: false
       UserPoolId: !Ref UserManagementPool
 
