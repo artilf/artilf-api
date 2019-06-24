@@ -49,7 +49,7 @@ Resources:
       RefreshTokenValidity: 30
       GenerateSecret: true
       UserPoolId: !Ref UserManagementPool
-      ExplictAuthFlows:
+      ExplicitAuthFlows:
         - ADMIN_NO_SRP_AUTH
 
   WebAuthClient:
