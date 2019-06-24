@@ -9,6 +9,9 @@ Parameters:
   CommonLayerArn:
     Type: String
 
+  CognitoSesAddressArn:
+    Type: String
+
   LambdaLogGroupNamePrefix:
     Type: String
     Default: /aws/lambda
@@ -42,6 +45,8 @@ Resources:
       EmailVerificationMessage: "verification: {####}"
       EmailVerificationSubject: verification
       MfaConfiguration: "OFF"
+      EmailConfiguration:
+        SourceArn: !Ref CognitoSesAddressArn
 
   TestAuthClient:
     Type: AWS::Cognito::UserPoolClient

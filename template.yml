@@ -5,9 +5,14 @@ Parameters:
   Env:
     Type: AWS::SSM::Parameter::Value<String>
     Default: EnvironName
+
   DefaultSlackIncommingWebhookUrl:
     Type: AWS::SSM::Parameter::Value<String>
     Default: ArtilfSlackWebhookUrl
+
+  CognitoSesAddressArn:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: CognitoSesAddressArn
 
 Resources:
   BaseResourceStack:
@@ -54,3 +59,4 @@ Resources:
       Parameters:
         Env: !Ref Env
         CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
+        CognitoSesAddressArn: !Ref CognitoSesAddressArn
