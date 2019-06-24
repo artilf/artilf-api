@@ -35,10 +35,26 @@ Resources:
           MinimumLength: 6
           RequireLowercase: true
           RequireNumbers: true
-          RequireSymbols: trye
+          RequireSymbols: true
           RequireUppercase: true
       AutoVerifiedAttributes:
         - email
       EmailVerificationMessage: "verification: {####}"
       EmailVerificationSubject: verification
       MfaConfiguration: OFF
+
+  TestAuthClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      RefreshTokenValidation: 30
+      GenerateSecret: true
+      UserPoolId: !Ref UserManagementPool
+      ExplictAuthFlows:
+        - ADMIN_NO_SRP_AUTH
+
+  WebAuthClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      RefreshTokenValidation: 30
+      GenerateSecret: false
+      UserPoolId: !Ref UserManagementPool
