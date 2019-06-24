@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: artilf certification
+
+Parameters:
+  Env:
+    Type: String
+
+  CommonLayerArn:
+    Type: String
+
+  LambdaLogGroupNamePrefix:
+    Type: String
+    Default: /aws/lambda
+
+Globals:
+  Function:
+    Runtime: python3.6
+    Timeout: 30
+    MemorySize: 128
+    AutoPublishAlias: !Ref Env
+    Environment:
+      Variables:
+        AWS_ENV: !Ref Env
+    Layers:
+      - !Ref CommonLayerArn
+
+
+Resources:
+  UserManagementPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: trye
+          RequireUppercase: true
+      AutoVerifiedAttributes:
+        - email
+      EmailVerificationMessage: "verification: {####}"
+      EmailVerificationSubject: verification
+      MfaConfiguration: OFF

@@ -46,3 +46,11 @@ Resources:
       Parameters:
         Env: !Ref Env
         LogS3BucketPutEventSNSTopicArn: !GetAtt LogParseResourceStack.Outputs.S3EventTopicArn
+
+  CertificationResourceStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/06_certificate_resource.yml
+      Parameters:
+        Env: !Ref Env
+        CommonLayerArn: !GetAtt BaseResourceStack.Outputs.CommonLayerArn
