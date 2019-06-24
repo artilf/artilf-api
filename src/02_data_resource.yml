@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: artilf data resources
+
+Parameters:
+  Env:
+    Type: String
+
+Resources:
+  UserDataTable:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: user_id
+        Type: String
+
+  ArticleDataTable:
+    Type: AWS::DynamoDB::Table
+    Properies:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: user_id
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+
+  DataBucket:
+    Type: AWS::S3::Bucket
+
+Outputs:
+  UserDataTableName:
+    Value: !Ref UserDataTable
+
+  ArticleDataTableName:
+    Value: !Ref ArticleDataTable
+
+  DataBucketName:
+    Value: !Ref DataBucket

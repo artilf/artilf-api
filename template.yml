@@ -15,6 +15,11 @@ Resources:
     Properties:
       TemplateURL: src/01_base_resource.yml
 
+  DataResourceBucket:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: src/02_data_resource.yml
+
   AlertResourceStack:
     Type: AWS::CloudFormation::Stack
     Properties:

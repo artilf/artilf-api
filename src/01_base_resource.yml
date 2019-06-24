@@ -3,9 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: artilf base resources
 
 Resources:
-  DataBucket:
-    Type: AWS::S3::Bucket
-
   CommonLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
@@ -15,8 +12,5 @@ Resources:
         - python3.6
 
 Outputs:
-  DataBucketName:
-    Value: !Ref DataBucket
-
   CommonLayerArn:
     Value: !Ref CommonLayer
