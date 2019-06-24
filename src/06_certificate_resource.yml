@@ -41,7 +41,7 @@ Resources:
         - email
       EmailVerificationMessage: "verification: {####}"
       EmailVerificationSubject: verification
-      MfaConfiguration: OFF
+      MfaConfiguration: "OFF"
 
   TestAuthClient:
     Type: AWS::Cognito::UserPoolClient
@@ -58,3 +58,13 @@ Resources:
       RefreshTokenValidation: 30
       GenerateSecret: false
       UserPoolId: !Ref UserManagementPool
+
+Outputs:
+  UserManagementPoolId:
+    Value: !Ref UserManagementPool
+
+  TestAuthClientId:
+    Value: !Ref TestAuthClient
+
+  WebAuthClientId:
+    Value: !Ref WebAuthClient
