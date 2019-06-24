@@ -1,10 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: artilf data resources
 
-Parameters:
-  Env:
-    Type: String
-
 Resources:
   UserDataTable:
     Type: AWS::Serverless::SimpleTable
