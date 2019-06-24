@@ -48,6 +48,8 @@ Resources:
       EmailConfiguration:
         SourceArn: !Ref CognitoSesAddressArn
         EmailSendingAccount: DEVELOPER
+      UsernameAttributes:
+        - email
 
   TestAuthClient:
     Type: AWS::Cognito::UserPoolClient
