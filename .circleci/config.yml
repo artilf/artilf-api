@@ -189,12 +189,12 @@ workflows:
   artilf_api_development:
     jobs:
       - test_unit
-#      - test_integration_log_parse:
-#          requires:
-#            - test_unit
-      - deploy_development:
+      - test_integration_log_parse:
           requires:
             - test_unit
+      - deploy_development:
+          requires:
+            - test_integration_log_parse
       - test_e2e_development:
           requires:
             - deploy_development
