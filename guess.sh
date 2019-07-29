@@ -42,7 +42,7 @@ export AWS_ENV="${aws_env}"
 export AWS_IAM_ROLE_ARN="${aws_iam_role_arn}"
 export AWS_IAM_ROLE_EXTERNAL_ID="${aws_iam_role_external_id}"
 export AWS_CFN_DEPLOY_ROLE_ARN="${aws_cfn_deploy_role_arn}"
-export AWS_CFN_NOTIFICATION_ARN="${aws_cfn_deploy_role_arn}"
+export AWS_CFN_NOTIFICATION_ARN="${aws_cfn_notification_arn}"
 EOT
 
 
