@@ -25,6 +25,7 @@ if [[ "$environment" == "development" ]]; then
   aws_iam_role_arn="$AWS_IAM_ROLE_ARN_DEVELOPMENT"
   aws_iam_role_external_id="$AWS_IAM_ROLE_EXTERNAL_ID_DEVELOPMENT"
   aws_cfn_deploy_role_arn="$AWS_CFN_DEPLOY_ROLE_ARN_DEVELOPMENT"
+  aws_cfn_notification_arn="$AWS_CFN_NOTIFICATION_ARN_DEVELOPMENT"
 elif [[ "$environment" == "production" ]]; then
   aws_env="production"
   aws_account_id="$AWS_ACCOUNT_ID_PRODUCTION"
@@ -41,6 +42,7 @@ export AWS_ENV="${aws_env}"
 export AWS_IAM_ROLE_ARN="${aws_iam_role_arn}"
 export AWS_IAM_ROLE_EXTERNAL_ID="${aws_iam_role_external_id}"
 export AWS_CFN_DEPLOY_ROLE_ARN="${aws_cfn_deploy_role_arn}"
+export AWS_CFN_NOTIFICATION_ARN="${aws_cfn_deploy_role_arn}"
 EOT
 
 

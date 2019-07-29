@@ -35,6 +35,7 @@ deploy: clean
 		--s3-bucket bibl-cfn-artifacts-$(AWS_ACCOUNT_ID)-$(AWS_ENV) \
 		--output-template-file packaged_template.yml
 	@aws cloudformation deploy \
+		--notification-arns $(AWS_CFN_NOTIFICATION_ARN) \
 		--template-file packaged_template.yml \
 		--stack-name artilf-api-$(AWS_ENV) \
 		--role-arn $(AWS_CFN_DEPLOY_ROLE_ARN) \
